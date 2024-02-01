@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.maithy.hobbiapp"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,6 +29,11 @@
     },
     "plugins": [
       "react-native-health"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "3ed4bc34-b00d-4f04-b910-bd811dd78c5a"
+      }
+    }
   }
 }
