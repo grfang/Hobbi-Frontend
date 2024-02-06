@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "hobbiapp.app"
-               BlueprintName = "hobbiapp"
-               ReferencedContainer = "container:hobbiapp.xcodeproj">
+               BuildableName = "Hobbi.app"
+               BlueprintName = "Hobbi"
+               ReferencedContainer = "container:Hobbi.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "hobbiappTests.xctest"
-               BlueprintName = "hobbiappTests"
-               ReferencedContainer = "container:hobbiapp.xcodeproj">
+               BuildableName = "HobbiTests.xctest"
+               BlueprintName = "HobbiTests"
+               ReferencedContainer = "container:Hobbi.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "hobbiapp.app"
-            BlueprintName = "hobbiapp"
-            ReferencedContainer = "container:hobbiapp.xcodeproj">
+            BuildableName = "Hobbi.app"
+            BlueprintName = "Hobbi"
+            ReferencedContainer = "container:Hobbi.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "hobbiapp.app"
-            BlueprintName = "hobbiapp"
-            ReferencedContainer = "container:hobbiapp.xcodeproj">
+            BuildableName = "Hobbi.app"
+            BlueprintName = "Hobbi"
+            ReferencedContainer = "container:Hobbi.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
