@@ -6,12 +6,24 @@ import Home from "./src/pages/Home";
 import Sleep from "./src/pages/Sleep";
 import Exercise from "./src/pages/Exercise";
 import Journal from "./src/pages/Journal";
+import Profile from "./src/pages/Profile";
 
 const Tab = createBottomTabNavigator();
+const HappiTheme = {
+  dark: false,
+  colors: {
+    primary: "rgb(76,164,87)",
+    background: "rgb(242, 242, 242)",
+    card: "rgb(255, 255, 255)",
+    text: "rgb(88, 120, 167)",
+    border: "rgb(76,164,87))",
+    notification: "rgb(255, 69, 58)",
+  },
+};
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={HappiTheme}>
       <Tab.Navigator>
         <Tab.Screen
           name="Home"
@@ -23,6 +35,7 @@ export default function App() {
             ),
           }}
         />
+        <Tab.Screen name="Journal" component={Journal} />
         <Tab.Screen
           name="Exercise"
           component={Exercise}
@@ -34,7 +47,7 @@ export default function App() {
           }}
         />
         <Tab.Screen name="Sleep" component={Sleep} />
-        <Tab.Screen name="Journal" component={Journal} />
+        <Tab.Screen name="Profile" component={Profile} />
       </Tab.Navigator>
     </NavigationContainer>
   );

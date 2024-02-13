@@ -1,10 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function Sleep() {
+export default function Profile() {
   return (
     <View style={styles.container}>
-      <Text>Placeholder for Sleep.</Text>
+      <Text>Placeholder for Profile.</Text>
       <StatusBar style="auto" />
     </View>
   );
