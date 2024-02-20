@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons, SimpleLineIcons} from "@expo/vector-icons";
 import Home from "./src/pages/Home";
 import Sleep from "./src/pages/Sleep";
 import Exercise from "./src/pages/Exercise";
@@ -35,7 +35,16 @@ export default function App() {
             ),
           }}
         />
-        <Tab.Screen name="Journal" component={Journal} />
+        <Tab.Screen
+          name="Journal"
+          component={Journal}
+          options={{
+            tabBarLabel: "Journal",
+            tabBarIcon: ({ color, size }) => (
+              <SimpleLineIcons name="notebook" color={color} size={size-6} />
+            ),
+          }}
+        />
         <Tab.Screen
           name="Exercise"
           component={Exercise}
@@ -46,8 +55,26 @@ export default function App() {
             ),
           }}
         />
-        <Tab.Screen name="Sleep" component={Sleep} />
-        <Tab.Screen name="Profile" component={Profile} />
+        <Tab.Screen
+          name="Sleep"
+          component={Sleep}
+          options={{
+            tabBarLabel: "Sleep",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="moon" color={color} size={size-4} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            tabBarLabel: "Profile",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="person-circle-outline" color={color} size={size} />
+            ),
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
