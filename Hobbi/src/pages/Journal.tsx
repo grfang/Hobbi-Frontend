@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
 import { Button, TextInput, Text, View } from "react-native";
-import { formatDateTime } from "../utils/dateUtils";
+import { formatDate } from "../utils/dateUtils";
 import { styles } from "../styles";
 
 export default function Journal() {
@@ -73,7 +73,7 @@ export default function Journal() {
     return (
       <View style={styles.container}>
         <Text style={styles.titleText}>
-          Your Journal on {formatDateTime(new Date(journal.date))}.
+          Your Journal on {formatDate(new Date(journal.date))}.
         </Text>
         <Text style={styles.regularText}>{journal.entry}</Text>
 
