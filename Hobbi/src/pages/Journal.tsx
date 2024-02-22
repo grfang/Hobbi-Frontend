@@ -18,6 +18,7 @@ export default function Journal() {
     fetch(get_url + new URLSearchParams(data))
       .then((res) => res.json())
       .then((response_data) => {
+        console.log(response_data);
         if (response_data.success) {
           setJournal(response_data.data);
         }
