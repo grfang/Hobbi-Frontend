@@ -22,7 +22,7 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
   textInput: {
-    height: 400,
+    height: 390,
     borderColor: "gray",
     borderWidth: 1,
     width: "80%",
@@ -30,7 +30,7 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   captionText: {
-    fontSize: 32,
+    fontSize: 25,
     color: "#333333",
     marginBottom: 5,
     textAlign: "center",
