@@ -27,7 +27,7 @@ export default function Journal() {
   const defaultJournal = { date: new Date(), entry: getJournalEntry() };
   const [journal, setJournal] = useState(defaultJournal); //TODO: Implement making calls to backend for journal data
   const [value, onChangeText] = useState("");
-  const [sentimentScore, setSentimentScore] = useState(0); // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  const [sentimentScore, setSentimentScore] = useState(0);
 
   const submitJournalEntry = () => {
     console.log("submitting journal entry");

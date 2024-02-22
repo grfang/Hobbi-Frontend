@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     paddingTop: 20,
   },
   titleText: {
-    fontSize: 20,
+    fontSize: 40,
     fontWeight: "bold",
     marginBottom: 20,
     marginHorizontal: 10,
@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
   titleCaption: {
-    fontSize: 20,
+    fontSize: 40,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
@@ -30,13 +30,13 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   captionText: {
-    fontSize: 16,
+    fontSize: 32,
     color: "#333333",
     marginBottom: 5,
     textAlign: "center",
   },
   regularText: {
-    fontSize: 16,
+    fontSize: 32,
     color: "#333333",
     marginBottom: 5,
   },
@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: 32,
     color: "#FFFFFF",
     textAlign: "center",
   },
