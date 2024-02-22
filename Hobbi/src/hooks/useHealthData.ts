@@ -92,16 +92,13 @@ const useHealthData = (date: Date) => {
 
       // console.log(results);
 
-      const longestSleepLog = results
-        .filter((log) => {
-          // HealthValue interface expects value to be a number but makes it a string for some reason...
-          return typeof log.value === "string" && log.value === "ASLEEP";
-        })
-        .reduce((prev, current) => {
-          if (!prev || !prev.startDate || !prev.endDate) {
-            return current;
-          }
+      const filteredResults = results.filter((log) => {
+        return typeof log.value === "string" && log.value === "ASLEEP";
+      });
 
+      let longestSleepLog;
+      if (filteredResults.length > 0) {
+        longestSleepLog = filteredResults.reduce((prev, current) => {
           const prevDuration =
             new Date(prev.endDate).getTime() -
             new Date(prev.startDate).getTime();
@@ -111,18 +108,22 @@ const useHealthData = (date: Date) => {
 
           return prevDuration > currentDuration ? prev : current;
         });
+      } else {
+        longestSleepLog = null;
+      }
 
-      const mappedSleepLog: SleepLog = {
-        id: longestSleepLog.id || "defaultId",
-        startDate: new Date(longestSleepLog.startDate),
-        endDate: new Date(longestSleepLog.endDate),
-        ...calculateDuration(
-          longestSleepLog.startDate,
-          longestSleepLog.endDate
-        ),
-      };
-
-      setSleep(mappedSleepLog);
+      if (longestSleepLog) {
+        const mappedSleepLog: SleepLog = {
+          id: longestSleepLog.id || "defaultId",
+          startDate: new Date(longestSleepLog.startDate),
+          endDate: new Date(longestSleepLog.endDate),
+          ...calculateDuration(
+            longestSleepLog.startDate,
+            longestSleepLog.endDate
+          ),
+        };
+        setSleep(mappedSleepLog);
+      }
     });
 
     AppleHealthKit.getAnchoredWorkouts(yesterdayOptions, (err, results) => {
