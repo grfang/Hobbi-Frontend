@@ -47,7 +47,7 @@ export default function Journal() {
     getJournalEntry();
   }, []);
 
-  if (journal === null) {
+  if (!journal) {
     return (
       <View style={styles.container}>
         <Text style={styles.titleText}>Your Journal for today.</Text>
@@ -70,13 +70,15 @@ export default function Journal() {
       </View>
     );
   } else {
-    <View style={styles.container}>
-      <Text style={styles.titleText}>
-        Your Journal on {formatDateTime(new Date(journal.date))}.
-      </Text>
-      <Text style={styles.regularText}>{journal.entry}</Text>
+    return (
+      <View style={styles.container}>
+        <Text style={styles.titleText}>
+          Your Journal on {formatDateTime(new Date(journal.date))}.
+        </Text>
+        <Text style={styles.regularText}>{journal.entry}</Text>
 
-      <StatusBar style="auto" backgroundColor="" />
-    </View>;
+        <StatusBar style="auto" backgroundColor="" />
+      </View>
+    );
   }
 }
