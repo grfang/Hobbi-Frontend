@@ -5,7 +5,7 @@ import { formatDateTime } from "../utils/dateUtils";
 import { styles } from "../styles";
 
 export default function Journal() {
-  const backend_url = "http://127.0.0.1:5000/journal?"; // change this eventually
+  const backend_url = "http://127.0.0.1:5000/journal?";
   const get_url = "http://127.0.0.1:5000/entry?";
   const [journal, setJournal] = useState<JournalEntry | null>(null);
   const [user_id, setUser_id] = useState("PU3T");
@@ -19,7 +19,7 @@ export default function Journal() {
       .then((res) => res.json())
       .then((response_data) => {
         if (response_data.success) {
-          setJournal(response_data.data); 
+          setJournal(response_data.data);
         }
       })
       .catch((err) => console.log(err));
@@ -33,7 +33,6 @@ export default function Journal() {
       date: new Date().toDateString(),
     };
 
-    // Make the fetch call with method POST
     fetch(backend_url + new URLSearchParams(data), {
       method: "GET",
     })
@@ -47,13 +46,11 @@ export default function Journal() {
   useEffect(() => {
     getJournalEntry();
   }, []);
-  
+
   if (journal === null) {
     return (
       <View style={styles.container}>
-        <Text style={styles.titleText}>
-          Your Journal for today.
-        </Text>
+        <Text style={styles.titleText}>Your Journal for today.</Text>
         <Text style={styles.captionText}>
           Complete your daily entry below and receive a score determining your
           estimated happiness.
@@ -74,15 +71,12 @@ export default function Journal() {
     );
   } else {
     <View style={styles.container}>
-        <Text style={styles.titleText}>
-          Your Journal on {formatDateTime(new Date(journal.date))}.
-        </Text>
-        <Text style={styles.captionText}>
-          {journal.entry}
-        </Text>
+      <Text style={styles.titleText}>
+        Your Journal on {formatDateTime(new Date(journal.date))}.
+      </Text>
+      <Text style={styles.regularText}>{journal.entry}</Text>
 
-        <StatusBar style="auto" backgroundColor="" />
-      </View>
-
+      <StatusBar style="auto" backgroundColor="" />
+    </View>;
   }
 }
