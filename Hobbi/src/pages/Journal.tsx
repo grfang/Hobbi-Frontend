@@ -34,7 +34,7 @@ export default function Journal() {
     const data = {
       user_id: user_id,
       entry: value,
-      date: journal.date.toDateString(),
+      date: new Date().toDateString(),
     };
 
     // Make the fetch call with method POST
