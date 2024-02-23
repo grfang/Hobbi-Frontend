@@ -7,6 +7,11 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 20,
   },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   titleText: {
     fontSize: 40,
     fontWeight: "bold",
