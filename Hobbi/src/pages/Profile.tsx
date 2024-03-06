@@ -10,60 +10,126 @@ export default function Profile() {
   //     <StatusBar style="auto" />
   //   </View>
   // );
-  const [name, setName] = useState<string>("John Doe"); // Initial name
-  const [email, setEmail] = useState<string>("john@example.com"); // Initial email
-  const [exercisePreference, setExercisePreference] = useState<string>("Daily"); // Initial exercise preference
-  const [sleepPreference, setSleepPreference] = useState<string>("8 hours"); // Initial sleep preference
+  const [editingName, setEditingName] = useState(false);
+  const [editingEmail, setEditingEmail] = useState(false);
+  const [editingExercisePreference, setEditingExercisePreference] = useState(false);
+  const [editingSleepPreference, setEditingSleepPreference] = useState(false);
+  const [name, setName] = useState('John Doe');
+  const [email, setEmail] = useState('john@example.com');
+  const [exercisePreference, setExercisePreference] = useState('Daily');
+  const [sleepPreference, setSleepPreference] = useState('8 hours');
 
-  const handleNameChange = (text: string) => {
-    setName(text);
+  const handleEditName = () => {
+    setEditingName(true);
   };
 
-  const handleEmailChange = (text: string) => {
-    setEmail(text);
+  const handleEditEmail = () => {
+    setEditingEmail(true);
   };
 
-  const handleExercisePreferenceChange = (text: string) => {
-    setExercisePreference(text);
+  const handleEditExercisePreference = () => {
+    setEditingExercisePreference(true);
   };
 
-  const handleSleepPreferenceChange = (text: string) => {
-    setSleepPreference(text);
+  const handleEditSleepPreference = () => {
+    setEditingSleepPreference(true);
+  };
+
+  const handleSaveName = () => {
+    setEditingName(false);
+    // Save name changes
+  };
+
+  const handleSaveEmail = () => {
+    setEditingEmail(false);
+    // Save email changes
+  };
+
+  const handleSaveExercisePreference = () => {
+    setEditingExercisePreference(false);
+    // Save exercise preference changes
+  };
+
+  const handleSaveSleepPreference = () => {
+    setEditingSleepPreference(false);
+    // Save sleep preference changes
   };
 
   return (
-    <View style={styles.container}>
+    <View>
       <Text style={styles.titleText}>User Profile</Text>
-      <Text style={styles.titleCaption}>Name: {name}</Text>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Enter new name"
-        onChangeText={handleNameChange}
-        value={name}
-      />
-      <Text style={styles.titleCaption}>Email: {email}</Text>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Enter new email"
-        onChangeText={handleEmailChange}
-        value={email}
-      />
-      <Text style={styles.titleCaption}>Exercise Preference: {exercisePreference}</Text>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Enter new exercise preference"
-        onChangeText={handleExercisePreferenceChange}
-        value={exercisePreference}
-      />
-      <Text style={styles.titleCaption}>Sleep Preference: {sleepPreference}</Text>
-      <TextInput
-        style={styles.textInput}
-        placeholder="Enter new sleep preference"
-        onChangeText={handleSleepPreferenceChange}
-        value={sleepPreference}
-      />
-      <Button title="Save Changes" onPress={() => alert("Changes saved!")} />
-      <StatusBar style="auto" />
+      
+      {/* Name section */}
+      {editingName ? (
+        <View>
+          <TextInput
+            placeholder="Enter new name"
+            onChangeText={setName}
+            style={styles.textInput}
+            autoCapitalize="none"
+          />
+          <Button title="Save" onPress={handleSaveName} />
+        </View>
+      ) : (
+        <View>
+          <Text style={styles.titleCaption}>Name: {name}</Text>
+          <Button title="Edit Name" onPress={handleEditName} />
+        </View>
+      )}
+
+      {/* Email section */}
+      {editingEmail ? (
+        <View>
+          <TextInput
+            placeholder="Enter new email"
+            onChangeText={setEmail}
+            style={styles.textInput}
+            autoCapitalize="none"
+          />
+          <Button title="Save" onPress={handleSaveEmail} />
+        </View>
+      ) : (
+        <View>
+          <Text style={styles.titleCaption}>Email: {email}</Text>
+          <Button title="Edit Email" onPress={handleEditEmail} />
+        </View>
+      )}
+
+      {/* Exercise Preference section */}
+      {editingExercisePreference ? (
+        <View>
+          <TextInput
+            placeholder="Enter new exercise preference"
+            onChangeText={setExercisePreference}
+            style={styles.textInput}
+            autoCapitalize="none"
+          />
+          <Button title="Save" onPress={handleSaveExercisePreference} />
+        </View>
+      ) : (
+        <View>
+          <Text style={styles.titleCaption}>Exercise Preference: {exercisePreference}</Text>
+          <Button title="Edit Exercise Preference" onPress={handleEditExercisePreference} />
+        </View>
+      )}
+
+      {/* Sleep Preference section */}
+      {editingSleepPreference ? (
+        <View>
+          <TextInput
+            placeholder="Enter new sleep preference"
+            onChangeText={setSleepPreference}
+            style={styles.textInput}
+            autoCapitalize="none"
+          />
+          <Button title="Save" onPress={handleSaveSleepPreference} />
+        </View>
+      ) : (
+        <View>
+          <Text style={styles.titleCaption}>Sleep Preference: {sleepPreference}</Text>
+          <Button title="Edit Sleep Preference" onPress={handleEditSleepPreference} />
+        </View>
+      )}
     </View>
   );
 }
@@ -84,6 +150,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: "bold",
     marginBottom: 20,
+    marginTop: 30,
     marginHorizontal: 10,
     color: "#5878A7",
     textAlign: "center",
@@ -96,12 +163,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   textInput: {
-    height: 10,
     borderColor: "gray",
     borderWidth: 1,
-    width: "80%",
-    marginVertical: 10,
-    padding: 10,
+    textAlign: 'center',
+    height: 35,
+    width: '80%',
+    alignSelf: 'center',
+    fontSize: 20,
+    marginBottom: 5,
+    marginTop: 20,
   },
   captionText: {
     fontSize: 25,
