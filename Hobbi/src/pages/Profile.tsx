@@ -51,7 +51,7 @@ export default function Profile() {
 
   return (
     <View>
-      <Text style={styles.titleText}>User Profile</Text>
+      <Text style={styles.titleText}>Profile</Text>
       
       {/* Name section */}
       {editingName ? (
@@ -124,6 +124,8 @@ export default function Profile() {
           <Button title="Edit Sleep Preference" onPress={handleEditSleepPreference} />
         </View>
       )}
+
+      <Button title="Logout" onPress={handleEditSleepPreference} color='red'/>
     </View>
   );
 }

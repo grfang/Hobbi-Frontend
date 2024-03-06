@@ -160,7 +160,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#fcfcfc'
   },
   captionText: {
-    fontSize: 25,
+    fontSize: 20,
     color: "#333333",
     marginBottom: 5,
     textAlign: "center",
