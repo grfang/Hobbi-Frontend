@@ -4,12 +4,6 @@ import { Text, View, TextInput, Button, StyleSheet } from "react-native";
 import { useState, useEffect } from "react";
 
 export default function Profile() {
-  // return (
-  //   <View style={styles.container}>
-  //     <Text>Placeholder for Profile.</Text>
-  //     <StatusBar style="auto" />
-  //   </View>
-  // );
   const [editingName, setEditingName] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
   const [editingExercisePreference, setEditingExercisePreference] = useState(false);

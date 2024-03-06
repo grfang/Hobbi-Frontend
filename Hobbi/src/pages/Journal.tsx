@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
-import { Button, TextInput, Text, View } from "react-native";
-import { styles } from "../styles";
+import { TextInput, Text, View, StyleSheet, Pressable } from "react-native";
+// import { styles } from "../styles";
 import LoadingScreen from "../components/LoadingScreen";
 
 export default function Journal() {
@@ -79,7 +79,9 @@ export default function Journal() {
         onChangeText={(text) => onChangeText(text)}
         value={value}
       />
-      <Button onPress={submitJournalEntry} title="Submit Journal Entry" />
+      <Pressable onPress={submitJournalEntry} style={styles.button}>
+        <Text style={styles.buttonText}>Submit Journal Entry</Text>
+      </Pressable>
 
       <StatusBar style="auto" backgroundColor="" />
     </View>
@@ -97,17 +99,16 @@ export default function Journal() {
     </View>
   );
 
+
   const renderSubmissionSuccess = () => (
     <View style={styles.centeredContainer}>
       <Text style={styles.titleText}>Journal Entry Submitted!</Text>
       <Text style={styles.captionText}>
         Your journal entry has been submitted for scoring.
       </Text>
-      <Button
-        onPress={() => setShowSubmissionSuccess(false)}
-        title="See Results"
-      />
-
+      <Pressable onPress={() => setShowSubmissionSuccess(false)} style={styles.button}>
+        <Text style={styles.buttonText}>See Results</Text>
+      </Pressable>
       <StatusBar style="auto" backgroundColor="" />
     </View>
   );
@@ -122,3 +123,61 @@ export default function Journal() {
 
   return journal ? renderJournalDisplay() : renderJournalInput();
 }
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingTop: 20,
+  },
+  centeredContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  titleText: {
+    fontSize: 40,
+    fontWeight: "bold",
+    marginBottom: 20,
+    marginHorizontal: 10,
+    color: "#5878A7",
+    textAlign: "center",
+  },
+  titleCaption: {
+    fontSize: 40,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  textInput: {
+    height: 390,
+    borderColor: "gray",
+    borderWidth: 1,
+    width: "80%",
+    marginVertical: 20,
+    padding: 10,
+  },
+  captionText: {
+    fontSize: 25,
+    color: "#333333",
+    marginBottom: 5,
+    textAlign: "center",
+  },
+  regularText: {
+    fontSize: 32,
+    color: "#333333",
+    marginBottom: 5,
+  },
+  button: {
+    backgroundColor: "#4CA457",
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: "#FFFFFF",
+    textAlign: "center",
+  },
+});
