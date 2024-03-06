@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 5,
     marginTop: 20,
+    backgroundColor: '#fcfcfc'
   },
   captionText: {
     fontSize: 25,

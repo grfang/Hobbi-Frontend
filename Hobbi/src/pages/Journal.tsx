@@ -157,6 +157,7 @@ export const styles = StyleSheet.create({
     width: "80%",
     marginVertical: 20,
     padding: 10,
+    backgroundColor: '#fcfcfc'
   },
   captionText: {
     fontSize: 25,
