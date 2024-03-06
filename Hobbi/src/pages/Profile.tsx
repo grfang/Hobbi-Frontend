@@ -49,9 +49,15 @@ export default function Profile() {
     // Save sleep preference changes
   };
 
+  const handleLogout = () => {
+    // Log the user out
+  };
+
   return (
     <View>
       <Text style={styles.titleText}>Profile</Text>
+
+      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 20}}/>
       
       {/* Name section */}
       {editingName ? (
@@ -89,6 +95,8 @@ export default function Profile() {
         </View>
       )}
 
+      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 20}}/>
+
       {/* Exercise Preference section */}
       {editingExercisePreference ? (
         <View>
@@ -106,6 +114,8 @@ export default function Profile() {
           <Button title="Edit Exercise Preference" onPress={handleEditExercisePreference} />
         </View>
       )}
+
+      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 20}}/> 
 
       {/* Sleep Preference section */}
       {editingSleepPreference ? (
@@ -125,7 +135,9 @@ export default function Profile() {
         </View>
       )}
 
-      <Button title="Logout" onPress={handleEditSleepPreference} color='red'/>
+      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 20, marginBottom: 20}}/>
+
+      <Button title="Logout" onPress={handleLogout} color='red'/>
     </View>
   );
 }
@@ -145,7 +157,6 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 40,
     fontWeight: "bold",
-    marginBottom: 20,
     marginTop: 30,
     marginHorizontal: 10,
     color: "#5878A7",
