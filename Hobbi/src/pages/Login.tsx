@@ -1,0 +1,70 @@
+import { useState } from "react";
+import {
+  Text,
+  View,
+  Button,
+  KeyboardAvoidingView,
+  TextInput,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { type StackNavigation } from "../../App";
+import { login } from "../services/auth";
+
+const Login = () => {
+  const { navigate } = useNavigation<StackNavigation>();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showEmailMessage, setShowEmailMessage] = useState(false);
+
+  const handleSignup = () => {
+    navigate("Register");
+  };
+
+  const handleLogin = async () => {
+    setIsLoading(true);
+    try {
+      console.log(email, password);
+      const user = await login(email, password);
+      if (user) {
+        // if (!user.emailVerified) {
+        //   console.log("Email not verified");
+        //   setShowEmailMessage(true);
+        //   await emailVerification();
+        //   await logout();
+        //   setIsLoading(false);
+        // }
+        console.log("Logged in", user);
+        navigate("Main");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return (
+    <KeyboardAvoidingView>
+      <View>
+        <Text>Login Page</Text>
+        <TextInput
+          placeholder="Email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          value={email}
+          onChangeText={setEmail}
+        ></TextInput>
+        <TextInput
+          secureTextEntry={true}
+          placeholder="Password"
+          autoCapitalize="none"
+          value={password}
+          onChangeText={setPassword}
+        ></TextInput>
+        <Button onPress={() => handleLogin()} title="Login" />
+      </View>
+    </KeyboardAvoidingView>
+  );
+};
+
+export default Login;
