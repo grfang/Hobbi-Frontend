@@ -1,17 +1,19 @@
 import { StatusBar } from "expo-status-bar";
-import { Text, View, TextInput, Button, StyleSheet } from "react-native";
+import { Text, View, TextInput, Button, StyleSheet, Pressable } from "react-native";
 // import { styles } from "../styles";
 import { useState, useEffect } from "react";
+import useAllData from "../hooks/useAllData";
 
 export default function Profile() {
   const [editingName, setEditingName] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
-  const [editingExercisePreference, setEditingExercisePreference] = useState(false);
-  const [editingSleepPreference, setEditingSleepPreference] = useState(false);
-  const [name, setName] = useState('John Doe');
-  const [email, setEmail] = useState('john@example.com');
-  const [exercisePreference, setExercisePreference] = useState('Daily');
-  const [sleepPreference, setSleepPreference] = useState('8 hours');
+  const [editingExerciseGoal, setEditingExerciseGoal] = useState(false);
+  const [editingSkill, setEditingSkill] = useState(false);
+  const [editingEquipment, setEditingEquipment] = useState(false);
+  const [editingSleepGoal, setEditingSleepGoal] = useState(false);
+  const [editingWakeupTime, setEditingWakeupTime] = useState(false);
+
+  const {name, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime, happinessScore, journalEntry, journalDate} = useAllData()
 
   const handleEditName = () => {
     setEditingName(true);
@@ -21,12 +23,24 @@ export default function Profile() {
     setEditingEmail(true);
   };
 
-  const handleEditExercisePreference = () => {
-    setEditingExercisePreference(true);
+  const handleEditExerciseGoal = () => {
+    setEditingExerciseGoal(true);
   };
 
-  const handleEditSleepPreference = () => {
-    setEditingSleepPreference(true);
+  const handleEditSkill = () => {
+    setEditingSkill(true);
+  };
+
+  const handleEditEquipment = () => {
+    setEditingEquipment(true);
+  };
+
+  const handleEditSleepGoal = () => {
+    setEditingSleepGoal(true);
+  };
+
+  const handleEditWakeupTime = () => {
+    setEditingWakeupTime(true);
   };
 
   const handleSaveName = () => {
@@ -39,13 +53,28 @@ export default function Profile() {
     // Save email changes
   };
 
-  const handleSaveExercisePreference = () => {
-    setEditingExercisePreference(false);
+  const handleSaveExerciseGoal = () => {
+    setEditingExerciseGoal(false);
     // Save exercise preference changes
   };
 
-  const handleSaveSleepPreference = () => {
-    setEditingSleepPreference(false);
+  const handleSaveSkill = () => {
+    setEditingSkill(false);
+    // Save exercise preference changes
+  };
+
+  const handleSaveEquipment = () => {
+    setEditingEquipment(false);
+    // Save exercise preference changes
+  };
+
+  const handleSaveSleepGoal = () => {
+    setEditingSleepGoal(false);
+    // Save sleep preference changes
+  };
+
+  const handleSaveWakeupTime = () => {
+    setEditingWakeupTime(false);
     // Save sleep preference changes
   };
 
@@ -57,87 +86,171 @@ export default function Profile() {
     <View>
       <Text style={styles.titleText}>Profile</Text>
 
-      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 20}}/>
+      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
       
-      {/* Name section */}
+      {/* Personal section */}
+      <Text style={styles.heading2}>Personal Info</Text>
+
       {editingName ? (
         <View>
           <TextInput
             placeholder="Enter new name"
-            onChangeText={setName}
             style={styles.textInput}
             autoCapitalize="none"
           />
-          <Button title="Save" onPress={handleSaveName} />
+          <Pressable onPress={handleSaveName} style={styles.button}>
+            <Text style={styles.buttonText}>Save</Text>
+          </Pressable>
         </View>
       ) : (
         <View>
           <Text style={styles.titleCaption}>Name: {name}</Text>
-          <Button title="Edit Name" onPress={handleEditName} />
+          <Pressable onPress={handleEditName} style={styles.button}>
+            <Text style={styles.buttonText}>Edit Name</Text>
+          </Pressable>
         </View>
       )}
 
-      {/* Email section */}
       {editingEmail ? (
         <View>
           <TextInput
             placeholder="Enter new email"
-            onChangeText={setEmail}
             style={styles.textInput}
             autoCapitalize="none"
           />
-          <Button title="Save" onPress={handleSaveEmail} />
+          <Pressable onPress={handleSaveEmail} style={styles.button}>
+            <Text style={styles.buttonText}>Save</Text>
+          </Pressable>
         </View>
       ) : (
         <View>
           <Text style={styles.titleCaption}>Email: {email}</Text>
-          <Button title="Edit Email" onPress={handleEditEmail} />
+          <Pressable onPress={handleEditEmail} style={styles.button}>
+            <Text style={styles.buttonText}>Edit Email</Text>
+          </Pressable>
         </View>
       )}
 
-      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 20}}/>
+      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
+
+
 
       {/* Exercise Preference section */}
-      {editingExercisePreference ? (
+      <Text style={styles.heading2}>Exercise Preferences</Text>
+
+      {editingExerciseGoal ? (
         <View>
           <TextInput
-            placeholder="Enter new exercise preference"
-            onChangeText={setExercisePreference}
+            placeholder="Enter new exercise goal"
             style={styles.textInput}
             autoCapitalize="none"
           />
-          <Button title="Save" onPress={handleSaveExercisePreference} />
+          <Pressable onPress={handleSaveExerciseGoal} style={styles.button}>
+            <Text style={styles.buttonText}>Save</Text>
+          </Pressable>
         </View>
       ) : (
         <View>
-          <Text style={styles.titleCaption}>Exercise Preference: {exercisePreference}</Text>
-          <Button title="Edit Exercise Preference" onPress={handleEditExercisePreference} />
+          <Text style={styles.titleCaption}>Exercise Goal: {exerciseGoal}</Text>
+          <Pressable onPress={handleEditExerciseGoal} style={styles.button}>
+            <Text style={styles.buttonText}>Edit Exercise Goal</Text>
+          </Pressable>
         </View>
       )}
 
-      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 20}}/> 
+      {editingSkill ? (
+        <View>
+          <TextInput
+            placeholder="Enter new skill level"
+            style={styles.textInput}
+            autoCapitalize="none"
+          />
+          <Pressable onPress={handleSaveSkill} style={styles.button}>
+            <Text style={styles.buttonText}>Save</Text>
+          </Pressable>
+        </View>
+      ) : (
+        <View>
+          <Text style={styles.titleCaption}>Skill Level: {skill}</Text>
+          <Pressable onPress={handleEditSkill} style={styles.button}>
+            <Text style={styles.buttonText}>Edit Skill Level</Text>
+          </Pressable>
+        </View>
+      )}
+
+      {editingEquipment ? (
+        <View>
+          <TextInput
+            placeholder="Enter new equipment"
+            style={styles.textInput}
+            autoCapitalize="none"
+          />
+          <Pressable onPress={handleSaveEquipment} style={styles.button}>
+            <Text style={styles.buttonText}>Save</Text>
+          </Pressable>
+        </View>
+      ) : (
+        <View>
+          <Text style={styles.titleCaption}>Equipment: {equipment}</Text>
+          <Pressable onPress={handleEditEquipment} style={styles.button}>
+            <Text style={styles.buttonText}>Edit Equipment</Text>
+          </Pressable>
+        </View>
+      )}
+
+      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/> 
+
+
 
       {/* Sleep Preference section */}
-      {editingSleepPreference ? (
+      <Text style={styles.heading2}>Sleep Preferences</Text>
+
+      {editingSleepGoal ? (
         <View>
           <TextInput
-            placeholder="Enter new sleep preference"
-            onChangeText={setSleepPreference}
+            placeholder="Enter new sleep goal"
             style={styles.textInput}
             autoCapitalize="none"
           />
-          <Button title="Save" onPress={handleSaveSleepPreference} />
+          <Pressable onPress={handleSaveSleepGoal} style={styles.button}>
+            <Text style={styles.buttonText}>Save</Text>
+          </Pressable>
         </View>
       ) : (
         <View>
-          <Text style={styles.titleCaption}>Sleep Preference: {sleepPreference}</Text>
-          <Button title="Edit Sleep Preference" onPress={handleEditSleepPreference} />
+          <Text style={styles.titleCaption}>Sleep Goal: {sleepGoal}</Text>
+          <Pressable onPress={handleEditSleepGoal} style={styles.button}>
+            <Text style={styles.buttonText}>Edit Sleep Goal</Text>
+          </Pressable>
         </View>
       )}
 
-      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 20, marginBottom: 20}}/>
+      {editingWakeupTime ? (
+        <View>
+          <TextInput
+            placeholder="Enter new wake-up time"
+            style={styles.textInput}
+            autoCapitalize="none"
+          />
+          <Pressable onPress={handleSaveWakeupTime} style={styles.button}>
+            <Text style={styles.buttonText}>Save</Text>
+          </Pressable>
+        </View>
+      ) : (
+        <View>
+          <Text style={styles.titleCaption}>Wake-Up Time: {wakeupTime}</Text>
+          <Pressable onPress={handleEditWakeupTime} style={styles.button}>
+            <Text style={styles.buttonText}>Edit Wake-Up Time</Text>
+          </Pressable>
+        </View>
+      )}
 
-      <Button title="Logout" onPress={handleLogout} color='red'/>
+      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
+
+      <Pressable onPress={handleLogout} style={{backgroundColor: "#FFFFFF", padding: 10, borderRadius: 5}}>
+        <Text style={{fontSize: 15, color: "red", textAlign: "center",}}>Logout</Text>
+      </Pressable>
+      <StatusBar style="auto" />
     </View>
   );
 }
@@ -157,28 +270,34 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 40,
     fontWeight: "bold",
-    marginTop: 30,
+    marginTop: 20,
+    marginBottom: 10,
     marginHorizontal: 10,
     color: "#5878A7",
     textAlign: "center",
   },
-  titleCaption: {
+  heading2: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 5,
-    marginTop: 20,
+    marginBottom: 10,
+    color: "#5878A7",
+    textAlign: "center",
+  },
+  titleCaption: {
+    fontSize: 15,
+    fontWeight: "bold",
+    marginTop: 5,
     textAlign: "center",
   },
   textInput: {
     borderColor: "gray",
     borderWidth: 1,
     textAlign: 'center',
-    height: 35,
+    height: 30,
     width: '80%',
     alignSelf: 'center',
-    fontSize: 20,
-    marginBottom: 5,
-    marginTop: 20,
+    fontSize: 15,
+    marginTop: 5,
     backgroundColor: '#fcfcfc'
   },
   captionText: {
@@ -193,14 +312,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   button: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#FFFFFF",
     padding: 10,
     borderRadius: 5,
-    marginTop: 10,
   },
   buttonText: {
-    fontSize: 32,
-    color: "#FFFFFF",
+    fontSize: 15,
+    color: "blue",
     textAlign: "center",
   },
 });
