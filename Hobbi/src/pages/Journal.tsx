@@ -29,6 +29,7 @@ export default function Journal() {
         console.log(response_data);
         if (response_data.success) {
           setJournal(response_data.data);
+          setSentimentScore(response_data.data.score)
         }
       })
       .catch((err) => console.log(err))
@@ -44,13 +45,17 @@ export default function Journal() {
       date: date.toDateString(),
     };
 
-    fetch(backend_url + new URLSearchParams(data), {
-      method: "GET",
+    fetch(backend_url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((response_data) => {
         console.log(response_data);
-        setSentimentScore(response_data.score);
+        setSentimentScore(response_data.data.score);
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -89,11 +94,17 @@ export default function Journal() {
 
   const renderJournalDisplay = () => (
     <View style={styles.container}>
-      <Text style={styles.titleText}>
-        Your Journal score is {sentimentScore}.
-      </Text>
+      <Text style={styles.titleText}>Your Journal score is:</Text>
+      <Text style={styles.titleCaption}>{sentimentScore.toFixed(3)}</Text>
+
+      <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
+
+      <Text style={styles.heading2}>Your Entry:</Text>
       <Text style={styles.regularText}>{journal!.entry}</Text>
-      <Text style={styles.titleText}>Recommendations:</Text>
+
+      <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
+
+      <Text style={styles.heading2}>Recommendation:</Text>
 
       <StatusBar style="auto" backgroundColor="" />
     </View>
@@ -129,7 +140,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingTop: 20,
+    paddingTop: 10,
   },
   centeredContainer: {
     flex: 1,
@@ -139,7 +150,8 @@ export const styles = StyleSheet.create({
   titleText: {
     fontSize: 40,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 10,
+    marginTop: 10,
     marginHorizontal: 10,
     color: "#5878A7",
     textAlign: "center",
@@ -147,7 +159,11 @@ export const styles = StyleSheet.create({
   titleCaption: {
     fontSize: 40,
     fontWeight: "bold",
-    marginBottom: 20,
+    textAlign: "center",
+  },
+  heading2: {
+    fontSize: 30,
+    fontWeight: "bold",
     textAlign: "center",
   },
   textInput: {
@@ -160,15 +176,18 @@ export const styles = StyleSheet.create({
     backgroundColor: '#fcfcfc'
   },
   captionText: {
-    fontSize: 20,
+    fontSize: 25,
     color: "#333333",
     marginBottom: 5,
     textAlign: "center",
+    width: "90%",
   },
   regularText: {
-    fontSize: 32,
+    fontSize: 17.5,
     color: "#333333",
-    marginBottom: 5,
+    marginTop: 10,
+    textAlign: "center",
+    width: "80%",
   },
   button: {
     backgroundColor: "#4CA457",
