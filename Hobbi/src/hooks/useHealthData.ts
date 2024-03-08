@@ -136,7 +136,7 @@ const useHealthData = (date: Date) => {
 
       setWorkouts(results);
     });
-  }, [hasPermissions, date]);
+  }, [hasPermissions]);
 
   return { steps, sleep, workouts };
 };

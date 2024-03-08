@@ -43,14 +43,14 @@ const useAllData = () => {
             setWakeupTime(-1);
             setHappinessScore(-2);
             setJournalEntry('');
-            setJournalDate('')
+            setJournalDate('');
           }
         })
         .catch((err) => console.log(err));
     };
   
       fetchData();
-  }, [user_id]); // rerun if date or user_id changes
+  }, [user_id]); // rerun if user_id changes
 
   return {name, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime, happinessScore, journalEntry, journalDate};
 };

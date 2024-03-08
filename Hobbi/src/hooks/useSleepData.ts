@@ -43,7 +43,7 @@ const useSleepData = () => {
       };
   
       fetchWakeupData();
-  }, [user_id, sleepGoal, wakeupTime]); // rerun if date or user_id changes
+  }, [user_id, sleepGoal, wakeupTime]); // rerun if user_id changes
 
   return {sleepGoal, wakeupTime, recTimes};
 };

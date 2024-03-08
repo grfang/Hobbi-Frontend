@@ -13,7 +13,7 @@ export default function Profile() {
   const [editingSleepGoal, setEditingSleepGoal] = useState(false);
   const [editingWakeupTime, setEditingWakeupTime] = useState(false);
 
-  const {name, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime, happinessScore, journalEntry, journalDate} = useAllData()
+  const {name, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime} = useAllData()
 
   const handleEditName = () => {
     setEditingName(true);
