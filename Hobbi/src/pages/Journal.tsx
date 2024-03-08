@@ -71,23 +71,12 @@ export default function Journal() {
     if (sentimentScore == -2){
       rec = "No score to base recommendation off of.";
     } else if (sentimentScore < -0.5) {
-      //if sleep goal not met, recommend nap
-      //otherwise recommend meditation or something emotionally healing
       rec = "-1 to -0.5";
     } else if (sentimentScore < 0) {
-      //if sleep goal not met, recommend nap
-      //if exercise goal not met, recommend they do some small exercise since it boosts seratonin if they're feeling up to it, otherwise do something fun
-      //otherwise recommend that they get out and do something fun!
       rec = "-0.5 to 0";
     } else if (sentimentScore < 0.5) {
-      //if sleep goal not met, recommend nap
-      //if exercise goal not met, recommend they go and get their workouts in
-      //otherwise recommend they get out and do something fun!
       rec = "0 to 0.5";
     } else {
-      //if sleep goal not met, gentle reminder that they should probably get some sleep, but otherwise have fun
-      //if exercise goal not met, recommend they go and get their workouts in
-      //otherwise recommend they get out and try something new
       rec = "0.5 to 1";
     }
     return rec;
@@ -140,7 +129,7 @@ export default function Journal() {
   useEffect(() => {
     getJournalEntry();
     setRecommendation(getRecommendation())
-  }, [user_id]);
+  }, [user_id, sentimentScore]);
 
   const renderJournalInput = () => (
     <View style={styles.container}>
