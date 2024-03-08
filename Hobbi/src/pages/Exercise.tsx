@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StatusBar, TextInput, StyleSheet } from 'react-native';
+import { View, Text, StatusBar, TextInput, StyleSheet, ScrollView } from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
 // import { styles } from "../styles"; // Import your styles
 
@@ -71,11 +71,15 @@ export default function Exercise() {
           onSelectedItemsChange={handleSelectedItemsChange}
         />
         <Text style={ [styles.heading2, { marginTop: 20 }] }>Recommended Exercises:</Text>
+        <ScrollView>
         {recommendedExercises.map((exercise: Exercise) => (
-          <View key={exercise.field1}>
-            <Text>{exercise.Title}</Text>
+          <View key={exercise.field1} style={styles.exerciseContainer}>
+            <Text style={styles.exerciseTitle}>{exercise.Title}</Text>
+            <Text style={styles.exerciseDesc}>{exercise.Desc}</Text>
+            <Text style={styles.exerciseDetails}>Equipment: {exercise.Equipment}, Level: {exercise.Level}</Text>
           </View>
         ))}
+        </ScrollView>
       </View>
     </View>
   );
@@ -167,5 +171,26 @@ export const styles = StyleSheet.create({
     fontSize: 32,
     color: "#FFFFFF",
     textAlign: "center",
+  },
+  exerciseContainer: {
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginBottom: 10,
+    marginTop: 10,
+    width: '90%'
+  },
+  exerciseTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  exerciseDesc: {
+    fontSize: 14,
+    marginTop: 5,
+  },
+  exerciseDetails: {
+    fontSize: 12,
+    marginTop: 5,
+    color: '#666',
   },
 });
