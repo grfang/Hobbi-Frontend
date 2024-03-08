@@ -66,7 +66,12 @@ export default function Journal() {
     } else {
       setSleepScore(0);
     }
-
+    
+    //variables:
+      // sleepScore: a score out of 100, if sleepScore >= 100, then their sleep goal has been met
+      // exerciseScore: a score out of 100, if exerciseScore >= 100, then their exercise goal has been met
+      // sentimentScore: their happiness score from -1 to 1
+    //rec is the final string that is returned and displayed
     let rec = ""
     if (sentimentScore == -2){
       rec = "No score to base recommendation off of.";
