@@ -73,17 +73,36 @@ export default function Journal() {
       // sentimentScore: their happiness score from -1 to 1
     //rec is the final string that is returned and displayed
     let rec = ""
+    let depressed = 0
     if (sentimentScore == -2){
       rec = "No score to base recommendation off of.";
     } else if (sentimentScore < -0.5) {
-      rec = "-1 to -0.5";
-    } else if (sentimentScore < 0) {
-      rec = "-0.5 to 0";
-    } else if (sentimentScore < 0.5) {
-      rec = "0 to 0.5";
+      rec = "You should take some time to talk with a friend or meditate.";
+      depressed = 1;
+    } else if (sentimentScore >= 0.5 && sentimentScore < 0) {
+      rec = "You should go for a short walk or work on a hobby.";
+    } else if (sentimentScore >= 0 && sentimentScore < 0.5) {
+      rec = "You should complete any chores or work not done for now.";
     } else {
-      rec = "0.5 to 1";
+      rec = "You should try something new today, or learn something new!";
     }
+
+    if (sentimentScore != -2)
+    {
+      if (sleepScore < 100)
+        {
+          rec += " Then go take a nap.";
+        }
+      else if (exerciseScore < 100 && depressed != 1)
+        {
+          rec += " Then go do some exercise.";
+        }
+      else
+        {
+          rec += " Then go have fun!";
+        }
+    }
+
     return rec;
   };
 
