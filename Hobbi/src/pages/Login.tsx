@@ -5,13 +5,18 @@ import {
   Button,
   KeyboardAvoidingView,
   TextInput,
+  TouchableOpacity,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigation } from "../../App";
 import { login } from "../services/auth";
+import { styles } from "../styles";
 
 const Login = () => {
   const { navigate } = useNavigation<StackNavigation>();
+
+  const happi_logo = require("../../assets/happi_logo.png");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,8 +49,9 @@ const Login = () => {
   };
 
   return (
-    <KeyboardAvoidingView>
-      <View>
+    <KeyboardAvoidingView style={styles.centeredContainer}>
+      <View style={styles.centeredContainer}>
+        <Image source={happi_logo}></Image>
         <Text>Login Page</Text>
         <TextInput
           placeholder="Email"
@@ -62,6 +68,9 @@ const Login = () => {
           onChangeText={setPassword}
         ></TextInput>
         <Button onPress={() => handleLogin()} title="Login" />
+        <TouchableOpacity onPress={handleSignup}>
+          <Text>Don't have an account? Press here to register.</Text>
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );

@@ -3,13 +3,18 @@ import { NavigationContainer, NavigationProp } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { getAuth, onAuthStateChanged, type User } from "firebase/auth";
+import { app } from "./src/services/config";
+import { styles } from "./src/styles";
 
 import Login from "./src/pages/Login";
+import Register from "./src/pages/Register";
 import Home from "./src/pages/Home";
 import Sleep from "./src/pages/Sleep";
 import Exercise from "./src/pages/Exercise";
 import Journal from "./src/pages/Journal";
 import Profile from "./src/pages/Profile";
+import React, { useEffect } from "react";
 
 export type ScreenNames = [
   "Main",
@@ -96,20 +101,73 @@ function MainTabs() {
 }
 
 export default function App() {
+  const Stack = createNativeStackNavigator();
+  const auth = getAuth(app);
+  const [initializing, setInitializing] = React.useState(true);
+  const [user, setUser] = React.useState<User | null>(null);
+
+  // Handle user state changes
+  const onAuthStateChangedHandler = (user: User | null) => {
+    setUser(user);
+    if (initializing) {
+      setInitializing(false);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, onAuthStateChangedHandler);
+
+    return unsubscribe;
+  }, []);
+
+  if (initializing) {
+    return (
+      <View style={styles.centeredContainer}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
   return (
-    <NavigationContainer theme={HappiTheme}>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Main"
-          component={MainTabs}
-          options={{ headerShown: false }}
-        />
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {user ? (
+          <Stack.Screen
+            name="Main"
+            component={MainTabs}
+            options={{ headerShown: false }}
+          />
+        ) : (
+          <>
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Register"
+              component={Register}
+              options={{ headerShown: false }}
+            />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
+  // return (
+  //   <NavigationContainer theme={HappiTheme}>
+  //     <Stack.Navigator initialRouteName="Login">
+  //       <Stack.Screen
+  //         name="Login"
+  //         component={Login}
+  //         options={{ headerShown: false }}
+  //       />
+  //       <Stack.Screen
+  //         name="Main"
+  //         component={MainTabs}
+  //         options={{ headerShown: false }}
+  //       />
+  //     </Stack.Navigator>
+  //   </NavigationContainer>
+  // );
 }
