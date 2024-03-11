@@ -36,11 +36,11 @@ const useAllData = () => {
           } else {
             setName('');
             setEmail('');
-            setExerciseGoal(-1);
+            setExerciseGoal(0);
             setSkill('');
             setEquipment([]);
-            setSleepGoal(-1);
-            setWakeupTime(-1);
+            setSleepGoal(0);
+            setWakeupTime(0);
             setHappinessScore(-2);
             setJournalEntry('');
             setJournalDate('');

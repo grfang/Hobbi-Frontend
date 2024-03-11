@@ -43,8 +43,8 @@ export default function Journal() {
           setExerciseGoal(response_data.data.exercise_info.exercise_goal);
           setSleepGoal(response_data.data.sleep_info.sleep_goal);
         } else {
-          setExerciseGoal(-1);
-          setSleepGoal(-1);
+          setExerciseGoal(0);
+          setSleepGoal(0);
         }
       })
     .catch((err) => console.log(err));

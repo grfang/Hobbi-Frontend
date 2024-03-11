@@ -20,8 +20,8 @@ const useSleepData = () => {
             setSleepGoal(response_data.data.sleep_info.sleep_goal);
             setWakeupTime(response_data.data.sleep_info.wakeup_time);
           } else {
-            setSleepGoal(-1);
-            setWakeupTime(-1);
+            setSleepGoal(0);
+            setWakeupTime(0);
           }
         })
         .catch((err) => console.log(err));

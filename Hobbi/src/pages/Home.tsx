@@ -11,6 +11,50 @@ export default function Home() {
   const { steps, sleep, workouts } = useHealthData(date);
   const [happinessScore, setHappinessScore] = useState(0);
 
+  const [user_id, setUser_id] = useState("PU3T"); // TODO: Get user id from auth hook
+
+  const [exerciseGoal, setExerciseGoal] = useState(0);
+  const [exerciseScore, setExerciseScore] = useState(0);
+  const [sleepGoal, setSleepGoal] = useState(0);
+  const [sleepScore, setSleepScore] = useState(0);
+  const [sentimentScore, setSentimentScore] = useState(-2);
+
+  const data_url = "http://127.0.0.1:5000/data?";
+  const data = {user_id: user_id};
+
+  fetch(data_url + new URLSearchParams(data))
+    .then((res) => res.json())
+    .then((response_data) => {
+      if (response_data.success) {
+        setExerciseGoal(response_data.data.exercise_info.exercise_goal);
+        setSleepGoal(response_data.data.sleep_info.sleep_goal);
+        setSentimentScore((response_data.data.journal_info.happiness_score + 1) / 2);
+      } else {
+        setExerciseGoal(0);
+        setSleepGoal(0);
+        setSentimentScore(-2);
+      }
+    })
+  .catch((err) => console.log(err));
+
+  if (workouts) {
+    const totalExerciseDuration = workouts.data.reduce(
+      (total, workout) => total + ((workout.duration/60)/60), 0
+    );
+
+     if (typeof totalExerciseDuration === 'number' && !isNaN(totalExerciseDuration) && exerciseGoal !== 0) {
+      setExerciseScore(totalExerciseDuration / exerciseGoal);
+    }   else {
+      setExerciseScore(0);
+    }
+  }
+
+  if (typeof sleep.hours === 'number' && !isNaN(sleep.hours) && sleepGoal !== 0) {
+    setSleepScore(sleep.hours / sleepGoal);
+  } else {
+    setSleepScore(0);
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Your Overall Score is</Text>
@@ -22,17 +66,17 @@ export default function Home() {
 
       <View>
         <Text style={styles.captionText}>Journal</Text>
-        <Progress.Bar progress={0.3} width={400} height={30} color="rgb(255, 250, 160)" borderColor="black" />
+        <Progress.Bar progress={sentimentScore} width={400} height={30} color="rgb(255, 250, 160)" borderColor="black" />
       </View>
 
       <View>
         <Text style={styles.captionText}>Fitness</Text>
-        <Progress.Bar progress={0.8} width={400} height={30} color="rgb(193, 225, 193)" borderColor="black" />
+        <Progress.Bar progress={sleepScore} width={400} height={30} color="rgb(193, 225, 193)" borderColor="black" />
       </View>
 
       <View>
         <Text style={styles.captionText}>Sleep</Text>
-        <Progress.Bar progress={0.5} width={400} height={30} color="rgb(167, 199, 231)" borderColor="black" />
+        <Progress.Bar progress={exerciseScore} width={400} height={30} color="rgb(167, 199, 231)" borderColor="black" />
       </View>
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />

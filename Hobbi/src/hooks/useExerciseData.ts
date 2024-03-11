@@ -20,7 +20,7 @@ const useExerciseData = () => {
             setSkill(response_data.data.exercise_info.skill);
             setEquipment(response_data.data.exercise_info.equipment);
           } else {
-            setExerciseGoal(-1);
+            setExerciseGoal(0);
             setSkill('');
             setEquipment([]);
           }
