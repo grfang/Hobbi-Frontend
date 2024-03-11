@@ -80,7 +80,7 @@ export default function Journal() {
       rec = "You should take some time to talk with a friend or meditate.";
       depressed = 1;
     } else if (sentimentScore >= 0.5 && sentimentScore < 0) {
-      rec = "You should go for a short walk or work on a hobby.";
+      rec = "You should go out for a bit or work on a hobby.";
     } else if (sentimentScore >= 0 && sentimentScore < 0.5) {
       rec = "You should complete any chores or work not done for now.";
     } else {
