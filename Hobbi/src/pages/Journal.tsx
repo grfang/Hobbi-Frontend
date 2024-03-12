@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
-import { TextInput, Text, View, StyleSheet, Pressable } from "react-native";
+import { TextInput, Text, View, StyleSheet, Pressable, Modal } from "react-native";
 // import { styles } from "../styles";
 import LoadingScreen from "../components/LoadingScreen";
 import useHealthData from "../hooks/useHealthData";
@@ -17,6 +17,7 @@ export default function Journal() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [showSubmissionSuccess, setShowSubmissionSuccess] = useState(false);
+  const [showJournalModal, setShowJournalModal] = useState(false);
 
   const [journal, setJournal] = useState<JournalEntry | null>(null);
   const [sentimentScore, setSentimentScore] = useState(-2);
@@ -186,13 +187,39 @@ export default function Journal() {
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
 
-      <Text style={styles.heading2}>Your Entry:</Text>
-      <Text style={styles.regularText}>{journal!.entry}</Text>
+      <Text style={styles.heading2}>Recommendation:</Text>
+      <Text style={styles.regularText}>{recommendation}</Text>
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
 
-      <Text style={styles.heading2}>Recommendation:</Text>
-      <Text style={styles.regularText}>{recommendation}</Text>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showJournalModal}
+        onRequestClose={() => {
+          setShowJournalModal(!showJournalModal);
+        }}
+      >
+        <View style={styles.centeredContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.regularText}>{journal!.entry}</Text>
+            <Pressable
+              style={styles.button}
+              onPress={() => setShowJournalModal(!showJournalModal)}
+            >
+              <Text style={styles.buttonText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+      <Pressable
+        style={styles.button}
+        onPress={() => setShowJournalModal(true)}
+      >
+        <Text style={styles.buttonText}>View your Journal Entry</Text>
+      </Pressable>
 
       <StatusBar style="auto" backgroundColor="" />
     </View>
@@ -287,5 +314,20 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     color: "#FFFFFF",
     textAlign: "center",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });
