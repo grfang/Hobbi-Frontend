@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
-import { Button, TextInput, Text, View } from "react-native";
+import { Button, TextInput, Text, View, Modal, Pressable } from "react-native";
 import { styles } from "../styles";
 import LoadingScreen from "../components/LoadingScreen";
 
@@ -15,6 +15,7 @@ export default function Journal() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [showSubmissionSuccess, setShowSubmissionSuccess] = useState(false);
+  const [showJournalModal, setShowJournalModal] = useState(false);
 
   const [journal, setJournal] = useState<JournalEntry | null>(null);
   const [sentimentScore, setSentimentScore] = useState(0);
@@ -85,18 +86,6 @@ export default function Journal() {
     </View>
   );
 
-  const renderJournalDisplay = () => (
-    <View style={styles.container}>
-      <Text style={styles.titleText}>
-        Your Journal score is {sentimentScore}.
-      </Text>
-      <Text style={styles.regularText}>{journal!.entry}</Text>
-      <Text style={styles.titleText}>Recommendations:</Text>
-
-      <StatusBar style="auto" backgroundColor="" />
-    </View>
-  );
-
   const renderSubmissionSuccess = () => (
     <View style={styles.centeredContainer}>
       <Text style={styles.titleText}>Journal Entry Submitted!</Text>
@@ -107,6 +96,45 @@ export default function Journal() {
         onPress={() => setShowSubmissionSuccess(false)}
         title="See Results"
       />
+
+      <StatusBar style="auto" backgroundColor="" />
+    </View>
+  );
+
+  const renderJournalDisplay = () => (
+    <View style={styles.container}>
+      <Text style={styles.titleText}>
+        Your Journal score is {sentimentScore}.
+      </Text>
+      {/* <Text style={styles.regularText}>{journal!.entry}</Text> */}
+      <Text style={styles.titleText}>Recommendations:</Text>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={showJournalModal}
+        onRequestClose={() => {
+          setShowJournalModal(!showJournalModal);
+        }}
+      >
+        <View style={styles.centeredContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.regularText}>{journal!.entry}</Text>
+            <Pressable
+              style={styles.button}
+              onPress={() => setShowJournalModal(!showJournalModal)}
+            >
+              <Text>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+      <Pressable
+        style={styles.button}
+        onPress={() => setShowJournalModal(true)}
+      >
+        <Text>View your Journal Entry</Text>
+      </Pressable>
 
       <StatusBar style="auto" backgroundColor="" />
     </View>
