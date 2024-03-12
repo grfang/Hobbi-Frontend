@@ -2,80 +2,131 @@ import { StatusBar } from "expo-status-bar";
 import { Text, View, TextInput, Button, StyleSheet, Pressable } from "react-native";
 // import { styles } from "../styles";
 import { useState, useEffect } from "react";
+import MultiSelect from 'react-native-multiple-select';
 import useAllData from "../hooks/useAllData";
 
+const skillOptions = [{
+  id: '1',
+  name: 'Beginner'
+}, {
+  id: '2',
+  name: 'Intermediate'
+}, {
+  id: '3',
+  name: 'Expert'
+}];
+
+interface SingleSelectProps {
+  items: { id: string; name: string }[];
+  selectedItem: string[];
+  onSelectedItemsChange: (selectedItems: string[]) => void;
+}
+
+const equipmentOptions = [{
+  id: '1',
+  name: 'Body Only'
+}, {
+  id: '2',
+  name: 'Dumbbell'
+}, {
+  id: '3',
+  name: 'Barbell'
+}, {
+  id: '4',
+  name: 'Cable'
+}, {
+  id: '5',
+  name: 'Other'
+}];
+
 export default function Profile() {
-  const [editingName, setEditingName] = useState(false);
-  const [editingEmail, setEditingEmail] = useState(false);
-  const [editingExerciseGoal, setEditingExerciseGoal] = useState(false);
-  const [editingSkill, setEditingSkill] = useState(false);
-  const [editingEquipment, setEditingEquipment] = useState(false);
-  const [editingSleepGoal, setEditingSleepGoal] = useState(false);
-  const [editingWakeupTime, setEditingWakeupTime] = useState(false);
+  const [user_id, setUser_id] = useState("PU3T"); // TODO: Get user id from auth hook
+  const backend_url = "http://127.0.0.1:5000/changeData?";
 
-  const {name, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime} = useAllData()
+  const [selectedSkill, setSelectedSkill] = useState<string[]>([]);
+  const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
 
-  const handleEditName = () => {
-    setEditingName(true);
+  // const {first, last, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime} = useAllData();
+  const first = "Gia";
+  const last = "Fang";
+  const email = "giafang16@gmail.com";
+  const exerciseGoal = 2;
+  const skill = "Intermediate";
+  const equipment = ["Cable", "Barbell"];
+  const sleepGoal = 8;
+  const wakeupTime = 9;
+
+  const [editing, setEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    first: first,
+    last: last,
+    email: email,
+    exerciseGoal: exerciseGoal,
+    skill: skill,
+    equipment: equipment,
+    sleepGoal: sleepGoal,
+    wakeupTime: wakeupTime
+  });
+
+  const data = {user_id: user_id, first_name: formData.first, last_name: formData.last, email, exercise_goal: formData.exerciseGoal, skill: formData.skill, equipment: formData.equipment, sleep_goal: formData.sleepGoal, wakeup_time: formData.wakeupTime};
+
+  const fetchData = () => {
+    fetch(backend_url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((response_data) => {
+        setFormData({
+          first: response_data.first,
+          last: response_data.last,
+          email: response_data.email,
+          exerciseGoal: response_data.exerciseGoal,
+          skill: response_data.skill,
+          equipment: response_data.equipment,
+          sleepGoal: response_data.sleepGoal,
+          wakeupTime: response_data.wakeupTime
+        });
+      })
+      .catch((err) => console.log(err));
   };
 
-  const handleEditEmail = () => {
-    setEditingEmail(true);
+  const handleEdit = () => {
+    setEditing(true);
   };
 
-  const handleEditExerciseGoal = () => {
-    setEditingExerciseGoal(true);
+  const handleTextChange = (field: string, value: string) => {
+    setFormData({...formData, [field]: value});
   };
 
-  const handleEditSkill = () => {
-    setEditingSkill(true);
+  const handleSkillChange = (selectedItem: string[]) => {
+    setSelectedSkill(selectedItem);
+    const updatedValue = {
+      skill: selectedItem[0]
+    };
+    setFormData(prevState => ({
+      ...prevState,
+      ...updatedValue
+    }));
   };
 
-  const handleEditEquipment = () => {
-    setEditingEquipment(true);
+  const handleEquipmentChange = (selectedItems: string[]) => {
+    setSelectedEquipment(selectedItems);
+    const updatedValue = {
+      equipment: selectedItems
+    };
+    setFormData(prevState => ({
+      ...prevState,
+      ...updatedValue
+    }));
   };
 
-  const handleEditSleepGoal = () => {
-    setEditingSleepGoal(true);
-  };
-
-  const handleEditWakeupTime = () => {
-    setEditingWakeupTime(true);
-  };
-
-  const handleSaveName = () => {
-    setEditingName(false);
-    // Save name changes
-  };
-
-  const handleSaveEmail = () => {
-    setEditingEmail(false);
-    // Save email changes
-  };
-
-  const handleSaveExerciseGoal = () => {
-    setEditingExerciseGoal(false);
-    // Save exercise preference changes
-  };
-
-  const handleSaveSkill = () => {
-    setEditingSkill(false);
-    // Save exercise preference changes
-  };
-
-  const handleSaveEquipment = () => {
-    setEditingEquipment(false);
-    // Save exercise preference changes
-  };
-
-  const handleSaveSleepGoal = () => {
-    setEditingSleepGoal(false);
-    // Save sleep preference changes
-  };
-
-  const handleSaveWakeupTime = () => {
-    setEditingWakeupTime(false);
-    // Save sleep preference changes
+  const handleSave = () => {
+    setEditing(false);
+    fetchData();
   };
 
   const handleLogout = () => {
@@ -86,172 +137,166 @@ export default function Profile() {
     <View>
       <Text style={styles.titleText}>Profile</Text>
 
-      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
+      {editing ? (
+        <>
+          <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
       
-      {/* Personal section */}
-      <Text style={styles.heading2}>Personal Info</Text>
-
-      {editingName ? (
-        <View>
+          <Text style={styles.heading2}>Personal Info</Text>
           <TextInput
-            placeholder="Enter new name"
+            placeholder="Enter new first name"
             style={styles.textInput}
+            value={formData.first}
+            onChangeText={(text) => handleTextChange('first', text)}
             autoCapitalize="none"
           />
-          <Pressable onPress={handleSaveName} style={styles.button}>
-            <Text style={styles.buttonText}>Save</Text>
-          </Pressable>
-        </View>
-      ) : (
-        <View>
-          <Text style={styles.titleCaption}>Name: {name}</Text>
-          <Pressable onPress={handleEditName} style={styles.button}>
-            <Text style={styles.buttonText}>Edit Name</Text>
-          </Pressable>
-        </View>
-      )}
-
-      {editingEmail ? (
-        <View>
+          <TextInput
+            placeholder="Enter new last name"
+            style={styles.textInput}
+            value={formData.last}
+            onChangeText={(text) => handleTextChange('last', text)}
+            autoCapitalize="none"
+          />
           <TextInput
             placeholder="Enter new email"
             style={styles.textInput}
+            value={formData.email}
+            onChangeText={(text) => handleTextChange('email', text)}
             autoCapitalize="none"
           />
-          <Pressable onPress={handleSaveEmail} style={styles.button}>
-            <Text style={styles.buttonText}>Save</Text>
-          </Pressable>
-        </View>
-      ) : (
-        <View>
-          <Text style={styles.titleCaption}>Email: {email}</Text>
-          <Pressable onPress={handleEditEmail} style={styles.button}>
-            <Text style={styles.buttonText}>Edit Email</Text>
-          </Pressable>
-        </View>
-      )}
 
-      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
+          <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
+      
+          <Text style={styles.heading2}>Exercise Preferences</Text>
+          <View style={styles.centeredContainer}>
+            <TextInput
+              placeholder="Enter new exercise goal"
+              style={styles.textInput}
+              value={formData.exerciseGoal.toString()}
+              onChangeText={(text) => handleTextChange('exerciseGoal', text)}
+              autoCapitalize="none"
+            />
+            <View style={{'width': "80%"}}>
+              <SingleSelectFeature
+                items={skillOptions}
+                selectedItem={selectedSkill}
+                onSelectedItemsChange={handleSkillChange}
+              />
+            </View>
+            <View style={{'width': "80%"}}>
+              <MultiSelectFeature
+                items={equipmentOptions}
+                selectedItem={selectedEquipment}
+                onSelectedItemsChange={handleEquipmentChange}
+              />
+            </View>
+          </View>
 
-
-
-      {/* Exercise Preference section */}
-      <Text style={styles.heading2}>Exercise Preferences</Text>
-
-      {editingExerciseGoal ? (
-        <View>
-          <TextInput
-            placeholder="Enter new exercise goal"
-            style={styles.textInput}
-            autoCapitalize="none"
-          />
-          <Pressable onPress={handleSaveExerciseGoal} style={styles.button}>
-            <Text style={styles.buttonText}>Save</Text>
-          </Pressable>
-        </View>
-      ) : (
-        <View>
-          <Text style={styles.titleCaption}>Exercise Goal: {exerciseGoal}</Text>
-          <Pressable onPress={handleEditExerciseGoal} style={styles.button}>
-            <Text style={styles.buttonText}>Edit Exercise Goal</Text>
-          </Pressable>
-        </View>
-      )}
-
-      {editingSkill ? (
-        <View>
-          <TextInput
-            placeholder="Enter new skill level"
-            style={styles.textInput}
-            autoCapitalize="none"
-          />
-          <Pressable onPress={handleSaveSkill} style={styles.button}>
-            <Text style={styles.buttonText}>Save</Text>
-          </Pressable>
-        </View>
-      ) : (
-        <View>
-          <Text style={styles.titleCaption}>Skill Level: {skill}</Text>
-          <Pressable onPress={handleEditSkill} style={styles.button}>
-            <Text style={styles.buttonText}>Edit Skill Level</Text>
-          </Pressable>
-        </View>
-      )}
-
-      {editingEquipment ? (
-        <View>
-          <TextInput
-            placeholder="Enter new equipment"
-            style={styles.textInput}
-            autoCapitalize="none"
-          />
-          <Pressable onPress={handleSaveEquipment} style={styles.button}>
-            <Text style={styles.buttonText}>Save</Text>
-          </Pressable>
-        </View>
-      ) : (
-        <View>
-          <Text style={styles.titleCaption}>Equipment: {equipment}</Text>
-          <Pressable onPress={handleEditEquipment} style={styles.button}>
-            <Text style={styles.buttonText}>Edit Equipment</Text>
-          </Pressable>
-        </View>
-      )}
-
-      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/> 
-
-
-
-      {/* Sleep Preference section */}
-      <Text style={styles.heading2}>Sleep Preferences</Text>
-
-      {editingSleepGoal ? (
-        <View>
+          <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
+      
+          <Text style={styles.heading2}>Sleep Preferences Info</Text>
           <TextInput
             placeholder="Enter new sleep goal"
             style={styles.textInput}
+            value={formData.sleepGoal.toString()}
+            onChangeText={(text) => handleTextChange('sleepGoal', text)}
             autoCapitalize="none"
           />
-          <Pressable onPress={handleSaveSleepGoal} style={styles.button}>
-            <Text style={styles.buttonText}>Save</Text>
-          </Pressable>
-        </View>
-      ) : (
-        <View>
-          <Text style={styles.titleCaption}>Sleep Goal: {sleepGoal}</Text>
-          <Pressable onPress={handleEditSleepGoal} style={styles.button}>
-            <Text style={styles.buttonText}>Edit Sleep Goal</Text>
-          </Pressable>
-        </View>
-      )}
-
-      {editingWakeupTime ? (
-        <View>
           <TextInput
             placeholder="Enter new wake-up time"
             style={styles.textInput}
+            value={formData.wakeupTime.toString()}
+            onChangeText={(text) => handleTextChange('wakeupTime', text)}
             autoCapitalize="none"
           />
-          <Pressable onPress={handleSaveWakeupTime} style={styles.button}>
+
+          <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
+          <Pressable onPress={handleSave} style={styles.button}>
             <Text style={styles.buttonText}>Save</Text>
           </Pressable>
-        </View>
+        </>
       ) : (
-        <View>
-          <Text style={styles.titleCaption}>Wake-Up Time: {wakeupTime}</Text>
-          <Pressable onPress={handleEditWakeupTime} style={styles.button}>
-            <Text style={styles.buttonText}>Edit Wake-Up Time</Text>
-          </Pressable>
-        </View>
-      )}
+        <>
+          <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
+      
+          <Text style={styles.heading2}>Personal Info</Text>
+          <Text style={styles.titleCaption}>First Name: {formData.first}</Text>
+          <Text style={styles.titleCaption}>Last Name: {formData.last}</Text>
+          <Text style={styles.titleCaption}>Email: {formData.email}</Text>
 
-      <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
+          <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
+      
+          <Text style={styles.heading2}>Exercise Preferences</Text>
+          <Text style={styles.titleCaption}>Exercise Goal: {formData.exerciseGoal}</Text>
+          <Text style={styles.titleCaption}>Skill Level: {formData.skill}</Text>
+          <Text style={styles.titleCaption}>Equipment: {formData.equipment.join(', ')}</Text>
+
+          <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
+      
+          <Text style={styles.heading2}>Sleep Preferences</Text>
+          <Text style={styles.titleCaption}>Sleep Goal: {formData.sleepGoal}</Text>
+          <Text style={styles.titleCaption}>Wake-Up Time: {formData.wakeupTime}</Text>
+
+          <View style={{borderBottomColor: 'black', borderBottomWidth: StyleSheet.hairlineWidth, marginTop: 10, marginBottom: 10}}/>
+          <Pressable onPress={handleEdit} style={styles.button}>
+            <Text style={styles.buttonText}>Edit</Text>
+          </Pressable>
+        </>
+      )}
 
       <Pressable onPress={handleLogout} style={{backgroundColor: "#FFFFFF", padding: 10, borderRadius: 5}}>
         <Text style={{fontSize: 15, color: "red", textAlign: "center",}}>Logout</Text>
       </Pressable>
       <StatusBar style="auto" />
     </View>
+  );
+}
+
+function SingleSelectFeature({ items, selectedItem, onSelectedItemsChange }: SingleSelectProps) {
+  return (
+    <MultiSelect
+      items={items}
+      uniqueKey="name"
+      onSelectedItemsChange={onSelectedItemsChange}
+      selectedItems={selectedItem}
+      single={true}
+      selectText="Select Skill Level"
+      searchInputPlaceholderText="Search Items..."
+      onChangeInput={(text) => console.log(text)}
+      tagRemoveIconColor="#CCC"
+      tagBorderColor="#CCC"
+      tagTextColor="#CCC"
+      selectedItemTextColor="#CCC"
+      selectedItemIconColor="#CCC"
+      itemTextColor="#000"
+      displayKey="name"
+      searchInputStyle={{ color: '#CCC' }}
+      submitButtonColor="#CCC"
+      submitButtonText="Submit"
+    />
+  );
+}
+
+function MultiSelectFeature({ items, selectedItem, onSelectedItemsChange }: SingleSelectProps) {
+  return (
+    <MultiSelect
+      items={items}
+      uniqueKey="name"
+      onSelectedItemsChange={onSelectedItemsChange}
+      selectedItems={selectedItem}
+      selectText="Select Equipment"
+      searchInputPlaceholderText="Search Items..."
+      onChangeInput={(text) => console.log(text)}
+      tagRemoveIconColor="#CCC"
+      tagBorderColor="#4CA457"
+      tagTextColor="#4CA457"
+      selectedItemTextColor="#4CA457"
+      selectedItemIconColor="#4CA457"
+      itemTextColor="#000"
+      displayKey="name"
+      searchInputStyle={{ color: '#CCC' }}
+      submitButtonColor="#4CA457"
+      submitButtonText="Submit"
+    />
   );
 }
 
@@ -263,7 +308,6 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   centeredContainer: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -279,25 +323,26 @@ const styles = StyleSheet.create({
   heading2: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 20,
     color: "#5878A7",
     textAlign: "center",
   },
   titleCaption: {
     fontSize: 15,
     fontWeight: "bold",
-    marginTop: 5,
+    marginBottom: 20,
     textAlign: "center",
   },
   textInput: {
     borderColor: "gray",
     borderWidth: 1,
     textAlign: 'center',
-    height: 30,
+    height: 25,
     width: '80%',
     alignSelf: 'center',
     fontSize: 15,
     marginTop: 5,
+    marginBottom: 10,
     backgroundColor: '#fcfcfc'
   },
   captionText: {

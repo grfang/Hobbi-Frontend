@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { TextInput, Text, View, StyleSheet, Pressable } from "react-native";
 // import { styles } from "../styles";
 import LoadingScreen from "../components/LoadingScreen";

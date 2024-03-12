@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StatusBar, TextInput, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView} from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
 // import { styles } from "../styles"; // Import your styles
 
@@ -52,7 +52,6 @@ export default function Exercise() {
 
   const handleSelectedItemsChange = (selectedItem: string[]) => {
     setSelectedItem(selectedItem);
-    console.log(selectedItem)
     fetchData();
   };
 

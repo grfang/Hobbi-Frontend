@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import useHealthData from "../hooks/useHealthData";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { formatDateTime } from "../utils/dateUtils";
 // import { styles } from "../styles";
 import * as Progress from 'react-native-progress'; // make sure to install this by doing "npm install react-native-progress --save"
@@ -19,41 +19,47 @@ export default function Home() {
   const [sleepScore, setSleepScore] = useState(0);
   const [sentimentScore, setSentimentScore] = useState(-2);
 
-  const data_url = "http://127.0.0.1:5000/data?";
-  const data = {user_id: user_id};
+  const getScores = () => {
+    const data_url = "http://127.0.0.1:5000/data?";
+    const data = {user_id: user_id};
 
-  fetch(data_url + new URLSearchParams(data))
-    .then((res) => res.json())
-    .then((response_data) => {
-      if (response_data.success) {
-        setExerciseGoal(response_data.data.exercise_info.exercise_goal);
-        setSleepGoal(response_data.data.sleep_info.sleep_goal);
-        setSentimentScore((response_data.data.journal_info.happiness_score + 1) / 2);
-      } else {
-        setExerciseGoal(0);
-        setSleepGoal(0);
-        setSentimentScore(-2);
+    fetch(data_url + new URLSearchParams(data))
+      .then((res) => res.json())
+      .then((response_data) => {
+        if (response_data.success) {
+          setExerciseGoal(response_data.data.exercise_info.exercise_goal);
+          setSleepGoal(response_data.data.sleep_info.sleep_goal);
+          setSentimentScore((response_data.data.journal_info.happiness_score + 1) / 2);
+        } else {
+          setExerciseGoal(0);
+          setSleepGoal(0);
+          setSentimentScore(-2);
+        }
+      })
+    .catch((err) => console.log(err));
+
+    if (workouts) {
+      const totalExerciseDuration = workouts.data.reduce(
+        (total, workout) => total + ((workout.duration/60)/60), 0
+      );
+
+      if (typeof totalExerciseDuration === 'number' && !isNaN(totalExerciseDuration) && exerciseGoal !== 0) {
+        setExerciseScore(totalExerciseDuration / exerciseGoal);
+      }   else {
+        setExerciseScore(0);
       }
-    })
-  .catch((err) => console.log(err));
-
-  if (workouts) {
-    const totalExerciseDuration = workouts.data.reduce(
-      (total, workout) => total + ((workout.duration/60)/60), 0
-    );
-
-     if (typeof totalExerciseDuration === 'number' && !isNaN(totalExerciseDuration) && exerciseGoal !== 0) {
-      setExerciseScore(totalExerciseDuration / exerciseGoal);
-    }   else {
-      setExerciseScore(0);
     }
-  }
 
-  if (typeof sleep.hours === 'number' && !isNaN(sleep.hours) && sleepGoal !== 0) {
-    setSleepScore(sleep.hours / sleepGoal);
-  } else {
-    setSleepScore(0);
-  }
+    if (typeof sleep.hours === 'number' && !isNaN(sleep.hours) && sleepGoal !== 0) {
+      setSleepScore(sleep.hours / sleepGoal);
+    } else {
+      setSleepScore(0);
+    }
+  };
+
+  useEffect(() => {
+    getScores();
+  }, [user_id, sentimentScore]);
 
   return (
     <View style={styles.container}>
@@ -80,13 +86,6 @@ export default function Home() {
       </View>
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
-
-      <Text style={styles.heading2}>Rolling Week Summary</Text>
-      
-      <Text style={styles.captionText}>
-        Over the last {7} days, you walked {20000} steps and averaged {6} hours of sleep per night.
-        Your average journal score was {80}% and your average daily score was {90}%.
-      </Text>
     
       <StatusBar style="auto" />
     </View>

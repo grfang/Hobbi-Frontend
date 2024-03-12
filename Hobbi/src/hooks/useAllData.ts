@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 
 const useAllData = () => {
-  const [name, setName] = useState('');
+  const [first, setFirst] = useState('');
+  const [last, setLast] = useState('');
   const [email, setEmail] = useState('');
   const [exerciseGoal, setExerciseGoal] = useState(0);
   const [skill, setSkill] = useState('');
@@ -23,7 +24,8 @@ const useAllData = () => {
         .then((res) => res.json())
         .then((response_data) => {
           if (response_data.success) {
-            setName(response_data.data.first + " " + response_data.data.last);
+            setFirst(response_data.data.first);
+            setLast(response_data.data.last);
             setEmail(response_data.data.email);
             setExerciseGoal(response_data.data.exercise_info.exercise_goal);
             setSkill(response_data.data.exercise_info.skill);
@@ -34,7 +36,8 @@ const useAllData = () => {
             setJournalEntry(response_data.data.journal_info.journal_entry);
             setJournalDate(response_data.data.journal_info.date);
           } else {
-            setName('');
+            setFirst('');
+            setLast('');
             setEmail('');
             setExerciseGoal(0);
             setSkill('');
@@ -52,7 +55,7 @@ const useAllData = () => {
       fetchData();
   }, [user_id]); // rerun if user_id changes
 
-  return {name, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime, happinessScore, journalEntry, journalDate};
+  return {first, last, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime, happinessScore, journalEntry, journalDate};
 };
 
 export default useAllData;
