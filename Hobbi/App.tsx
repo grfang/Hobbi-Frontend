@@ -1,14 +1,17 @@
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer, NavigationProp } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { getAuth, onAuthStateChanged, type User } from "firebase/auth";
+import { getPreferencesSet } from "./src/services/auth";
 import { app } from "./src/services/config";
 import { styles } from "./src/styles";
 
 import Login from "./src/pages/Login";
 import Register from "./src/pages/Register";
+import Preferences from "./src/pages/Preferences";
 import Home from "./src/pages/Home";
 import Sleep from "./src/pages/Sleep";
 import Exercise from "./src/pages/Exercise";
@@ -20,6 +23,7 @@ export type ScreenNames = [
   "Main",
   "Login",
   "Register",
+  "Preferences",
   "Home",
   "Journal",
   "Exercise",
@@ -28,7 +32,6 @@ export type ScreenNames = [
 ]; // type these manually
 export type RootStackParamList = Record<ScreenNames[number], undefined>;
 export type StackNavigation = NavigationProp<RootStackParamList>;
-const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
 const HappiTheme = {
@@ -103,12 +106,16 @@ function MainTabs() {
 export default function App() {
   const Stack = createNativeStackNavigator();
   const auth = getAuth(app);
-  const [initializing, setInitializing] = React.useState(true);
-  const [user, setUser] = React.useState<User | null>(null);
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [hasPreferences, setHasPreferences] = useState(false);
 
   // Handle user state changes
-  const onAuthStateChangedHandler = (user: User | null) => {
+  const onAuthStateChangedHandler = async (user: User | null) => {
     setUser(user);
+    if (user) {
+      setHasPreferences(await getPreferencesSet(user.uid));
+    }
     if (initializing) {
       setInitializing(false);
     }
@@ -129,15 +136,33 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={HappiTheme}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          <Stack.Screen
-            name="Main"
-            component={MainTabs}
-            options={{ headerShown: false }}
-          />
+          !hasPreferences ? (
+            // If preferences are not set, navigate to Preferences
+            <>
+              <Stack.Screen
+                name="Preferences"
+                component={Preferences}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Main"
+                component={MainTabs}
+                options={{ headerShown: false }}
+              />
+            </>
+          ) : (
+            // If preferences are already set, navigate to Main
+            <Stack.Screen
+              name="Main"
+              component={MainTabs}
+              options={{ headerShown: false }}
+            />
+          )
         ) : (
+          // User not logged in, show Login and Register
           <>
             <Stack.Screen
               name="Login"
@@ -154,6 +179,7 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
   );
+
   // return (
   //   <NavigationContainer theme={HappiTheme}>
   //     <Stack.Navigator initialRouteName="Login">

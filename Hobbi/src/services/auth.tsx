@@ -51,3 +51,24 @@ export const emailVerification = async () => {
     throw error;
   }
 };
+
+export const getPreferencesSet = async (id: string) => {
+  try {
+    const url = `http://127.0.0.1:5000/preferences?user_id=${encodeURIComponent(
+      id
+    )}`;
+
+    const response = await fetch(url);
+    const jsonResponse = await response.json(); // Parse the JSON response
+
+    if (jsonResponse.success) {
+      return jsonResponse.data;
+    } else {
+      console.error("Failed to fetch if user has preferences:", jsonResponse);
+      return false;
+    }
+  } catch (error) {
+    console.error("Error fetching if user has preferences:", error);
+    return false;
+  }
+};

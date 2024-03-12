@@ -33,6 +33,7 @@ const Register = () => {
       if (user) {
         const id = user.uid;
         await saveUserData(id, firstName, lastName, email);
+        navigate("Preferences");
       }
     } catch (error) {
       setIsLoading(false);
@@ -46,50 +47,48 @@ const Register = () => {
       }
       console.log(error);
     }
-
-    const handleLogin = () => {
-      navigate("Login");
-    };
-
-    return (
-      <ScrollView>
-        <View style={styles.centeredContainer}>
-          <Image source={happi_logo}></Image>
-          <Text>Login Page</Text>
-          <TextInput
-            placeholder="First Name"
-            autoCapitalize="words"
-            value={firstName}
-            onChangeText={setFirstName}
-          ></TextInput>
-          <TextInput
-            placeholder="Last Name"
-            autoCapitalize="words"
-            value={lastName}
-            onChangeText={setLastName}
-          ></TextInput>
-          <TextInput
-            placeholder="Email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            value={email}
-            onChangeText={setEmail}
-          ></TextInput>
-          <TextInput
-            secureTextEntry={true}
-            placeholder="Password"
-            autoCapitalize="none"
-            value={password}
-            onChangeText={setPassword}
-          ></TextInput>
-          <Button onPress={() => handleSignUp()} title="Sign Up" />
-          <TouchableOpacity onPress={handleLogin}>
-            <Text>Already have an account? Press here to login.</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    );
   };
+
+  const handleLogin = () => {
+    navigate("Login");
+  };
+
+  return (
+    <View style={styles.centeredContainer}>
+      <Image source={happi_logo}></Image>
+      <Text>Register Page</Text>
+      <TextInput
+        placeholder="First Name"
+        autoCapitalize="words"
+        value={firstName}
+        onChangeText={setFirstName}
+      ></TextInput>
+      <TextInput
+        placeholder="Last Name"
+        autoCapitalize="words"
+        value={lastName}
+        onChangeText={setLastName}
+      ></TextInput>
+      <TextInput
+        placeholder="Email"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
+      ></TextInput>
+      <TextInput
+        secureTextEntry={true}
+        placeholder="Password"
+        autoCapitalize="none"
+        value={password}
+        onChangeText={setPassword}
+      ></TextInput>
+      <Button onPress={() => handleSignUp()} title="Sign Up" />
+      <TouchableOpacity onPress={handleLogin}>
+        <Text>Already have an account? Press here to login.</Text>
+      </TouchableOpacity>
+    </View>
+  );
 };
 
 export default Register;
