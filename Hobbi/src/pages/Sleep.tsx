@@ -26,7 +26,7 @@ const preprocessData = (wakeupTime: number, recTimes: number[]) => {
 export default function Sleep() {
   const {sleepGoal, wakeupTime, recTimes} = useSleepData();
   const [date, setDate] = useState(new Date());
-  const { sleep } = useHealthData(date);
+  const { sleep } = useHealthData();
   const [sleepScore, setSleepScore] = useState(0);
 
   useEffect(() => {

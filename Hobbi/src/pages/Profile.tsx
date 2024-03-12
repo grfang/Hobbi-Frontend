@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import MultiSelect from 'react-native-multiple-select';
 import useAllData from "../hooks/useAllData";
 import { logout } from "../services/auth";
+import { getAuth } from "firebase/auth";
 
 const skillOptions = [{
   id: '1',
@@ -41,7 +42,8 @@ const equipmentOptions = [{
 }];
 
 export default function Profile() {
-  const [user_id, setUser_id] = useState("PU3T"); // TODO: Get user id from auth hook
+  const user = getAuth().currentUser;
+  const user_id = user ? user.uid : ""; // TODO: Get user id from auth hook
   const backend_url = "http://127.0.0.1:5000/changeData?";
 
   const {first, last, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime} = useAllData();

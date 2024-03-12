@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView} from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
+import { getAuth } from "firebase/auth";
 // import { styles } from "../styles"; // Import your styles
 
 const items = [{
@@ -27,7 +28,8 @@ interface SingleSelectProps {
 }
 
 export default function Exercise() {
-  const [user_id, setUser_id] = useState("PU3T"); // TODO: Get user id from auth hook
+  const user = getAuth().currentUser;
+  const user_id = user ? user.uid : ""; // TODO: Get user id from auth hook
   const backend_url = "http://127.0.0.1:5000/fitness?";
 
   const [selectedItem, setSelectedItem] = useState<string[]>([]);

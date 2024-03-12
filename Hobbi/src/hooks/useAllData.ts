@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { getAuth } from "firebase/auth";
 
 const useAllData = () => {
   const [first, setFirst] = useState('');
@@ -12,7 +13,8 @@ const useAllData = () => {
   const [happinessScore, setHappinessScore] = useState(0);
   const [journalEntry, setJournalEntry] = useState('');
   const [journalDate, setJournalDate] = useState('');
-  const user_id = "PU3T"; // TODO: Get user id from auth hook
+  const user = getAuth().currentUser;
+  const user_id = user ? user.uid : "";
 
   useEffect(() => {
     const data_url = "http://127.0.0.1:5000/data?";
@@ -35,18 +37,6 @@ const useAllData = () => {
             setHappinessScore(response_data.data.journal_info.happiness_score);
             setJournalEntry(response_data.data.journal_info.journal_entry);
             setJournalDate(response_data.data.journal_info.date);
-          } else {
-            setFirst('');
-            setLast('');
-            setEmail('');
-            setExerciseGoal(0);
-            setSkill('');
-            setEquipment([]);
-            setSleepGoal(0);
-            setWakeupTime(0);
-            setHappinessScore(-2);
-            setJournalEntry('');
-            setJournalDate('');
           }
         })
         .catch((err) => console.log(err));

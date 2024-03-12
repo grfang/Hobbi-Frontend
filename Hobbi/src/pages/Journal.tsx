@@ -5,6 +5,8 @@ import { TextInput, Text, View, StyleSheet, Pressable, Modal } from "react-nativ
 import LoadingScreen from "../components/LoadingScreen";
 import useHealthData from "../hooks/useHealthData";
 import useAllData from "../hooks/useAllData";
+import { getAuth } from "firebase/auth";
+import getScores from "../hooks/calculateScores";
 
 export default function Journal() {
   const backend_url = "http://127.0.0.1:5000/journal?";
@@ -12,52 +14,29 @@ export default function Journal() {
 
   const date = new Date();
 
-  const [user_id, setUser_id] = useState("PU3T"); // TODO: Get user id from auth hook
+  const user = getAuth().currentUser;
+  const user_id = user ? user.uid : "";
 
   const [isLoading, setIsLoading] = useState(true);
   const [showSubmissionSuccess, setShowSubmissionSuccess] = useState(false);
   const [showJournalModal, setShowJournalModal] = useState(false);
 
   const [journal, setJournal] = useState<JournalEntry | null>(null);
-  const [sentimentScore, setSentimentScore] = useState(-2);
+  const [sentimentScore, setSentimentScore] = useState(0);
   const [value, onChangeText] = useState("");
 
   const [recommendation, setRecommendation] = useState("")
 
-  const { sleep, workouts } = useHealthData(date);
-  const { sleepGoal, exerciseGoal} = useAllData();
-
-  const [exerciseScore, setExerciseScore] = useState(0);
-  const [sleepScore, setSleepScore] = useState(0);
+  const {exerciseScore, sleepScore} = getScores();
 
   useEffect(() => {
+    setIsLoading(true);
     getJournalEntry();
-    getRecommendation();
+    setRecommendation(getRecommendation());
+    setIsLoading(false);
   }, [user_id, sleepScore, exerciseScore, sentimentScore]);
 
-  const calculateScores = () => {
-    if (workouts) {
-      const totalExerciseDuration = workouts.data.reduce(
-        (total, workout) => total + ((workout.duration/60)/60), 0
-      );
-
-      if (typeof totalExerciseDuration === 'number' && !isNaN(totalExerciseDuration) && exerciseGoal !== 0) {
-        setExerciseScore((totalExerciseDuration / exerciseGoal) * 100);
-      }   else {
-        setExerciseScore(0);
-      }
-    }
-
-    if (typeof sleep.hours === 'number' && !isNaN(sleep.hours) && sleepGoal !== 0) {
-      setSleepScore((sleep.hours / sleepGoal) * 100);
-    } else {
-      setSleepScore(0);
-    }
-
-  }
-
   const getRecommendation = () => {
-    calculateScores();
     //variables:
       // sleepScore: a score out of 100, if sleepScore >= 100, then their sleep goal has been met
       // exerciseScore: a score out of 100, if exerciseScore >= 100, then their exercise goal has been met
@@ -65,7 +44,7 @@ export default function Journal() {
     //rec is the final string that is returned and displayed
     let rec = ""
     let depressed = 0
-    if (sentimentScore == -2){
+    if (!journal){
       rec = "No score to base recommendation off of.";
     } else if (sentimentScore < -0.5) {
       rec = "You should take some time to talk with a friend or meditate.";
@@ -78,13 +57,13 @@ export default function Journal() {
       rec = "You should try or learn something new today!";
     }
     
-    if (sentimentScore != -2)
+    if (journal)
     {
-      if (sleepScore < 100)
+      if (sleepScore < 1)
         {
           rec += " Then go take a nap because you have not slept as much as you'd like!";
         }
-      else if (exerciseScore < 100 && depressed != 1)
+      else if (exerciseScore < 1 && depressed != 1)
         {
           rec += " Then go do some exercise because you haven't met your daily exercise goal!";
         }
@@ -93,8 +72,8 @@ export default function Journal() {
           rec += " You should go have fun!";
         }
     }
-    setRecommendation(rec);
-    setIsLoading(false);
+    return rec;
+
   };
 
   const getJournalEntry = () => {
@@ -111,7 +90,6 @@ export default function Journal() {
       })
       .catch((err) => console.log(err))
       .finally(() => {
-        setIsLoading(false);
       });
   };
 

@@ -4,62 +4,17 @@ import useHealthData from "../hooks/useHealthData";
 import { useState, useEffect } from "react";
 import { formatDateTime } from "../utils/dateUtils";
 import useAllData from "../hooks/useAllData";
+import getScores from "../hooks/calculateScores";
 // import { styles } from "../styles";
 import * as Progress from 'react-native-progress'; // make sure to install this by doing "npm install react-native-progress --save"
 
 export default function Home() {
-  const [date, setDate] = useState(new Date());
-  const [dateString, setDateString] = useState(date.toDateString());
-
-  const [user_id, setUser_id] = useState("PU3T"); // TODO: Get user id from auth hook
-
-  const { sleep, workouts } = useHealthData(date);
-  const { sleepGoal, exerciseGoal, happinessScore, journalDate} = useAllData();
-
-  const [exerciseScore, setExerciseScore] = useState(0);
-  const [sleepScore, setSleepScore] = useState(0);
-  const [sentimentScore, setSentimentScore] = useState(-2);
-
-  useEffect(() => {
-    getScores();
-  }, [user_id, sleepScore, exerciseScore, sentimentScore]);
-
-  const getScores = () => {
-    if (workouts) {
-      console.log(workouts.data);
-
-      const totalExerciseDuration = workouts.data.reduce(
-        (total, workout) => total + ((workout.duration/60)/60), 0
-      );
-
-      if (typeof totalExerciseDuration === 'number' && !isNaN(totalExerciseDuration) && exerciseGoal !== 0) {
-        setExerciseScore(totalExerciseDuration / exerciseGoal);
-      }   else {
-        setExerciseScore(0);
-      }
-    }
-
-    if (typeof sleep.hours === 'number' && !isNaN(sleep.hours) && sleepGoal !== 0) {
-      setSleepScore(sleep.hours / sleepGoal);
-    } else {
-      setSleepScore(0);
-    }
-
-    if (journalDate === dateString) {
-      setSentimentScore((happinessScore+1) / 2)
-    } else{
-      setSentimentScore(0)
-    }
-  };
-
-  const overallScore = () => {
-    return (sleepScore + exerciseScore + sentimentScore) / 3
-  }
+  const {sleepScore, exerciseScore, sentimentScore, overallScore} = getScores();
 
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Your Overall Score is</Text>
-      <Text style={styles.titleCaption}>{overallScore().toFixed(3)}</Text>
+      <Text style={styles.titleCaption}>{overallScore.toFixed(3)}</Text>
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
 

@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { getAuth } from "firebase/auth";
 
 const useExerciseData = () => {
   const [exerciseGoal, setExerciseGoal] = useState(0);
   const [skill, setSkill] = useState('');
   const [equipment, setEquipment] = useState([]);
-  const user_id = "PU3T"; // TODO: Get user id from auth hook
+  const user = getAuth().currentUser;
+  const user_id = user ? user.uid : "";
 
   useEffect(() => {
     const data_url = "http://127.0.0.1:5000/data?";

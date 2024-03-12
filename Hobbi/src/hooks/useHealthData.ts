@@ -20,7 +20,8 @@ const permissions: HealthKitPermissions = {
   },
 };
 
-const useHealthData = (date: Date) => {
+const useHealthData = () => {
+  const date = new Date();
   const defaultSleep = {
     id: "defaultId",
     startDate: date,
