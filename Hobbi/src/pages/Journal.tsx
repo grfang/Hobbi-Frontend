@@ -84,22 +84,22 @@ export default function Journal() {
     } else if (sentimentScore >= 0 && sentimentScore < 0.5) {
       rec = "You should complete any chores or work not done for now.";
     } else {
-      rec = "You should try something new today, or learn something new!";
+      rec = "You should try or learn something new today!";
     }
 
     if (sentimentScore != -2)
     {
       if (sleepScore < 100)
         {
-          rec += " Then go take a nap.";
+          rec += " Then go take a nap because you have not slept as much as you'd like!";
         }
       else if (exerciseScore < 100 && depressed != 1)
         {
-          rec += " Then go do some exercise.";
+          rec += " Then go do some exercise because you haven't met your daily exercise goal!";
         }
       else
         {
-          rec += " Then go have fun!";
+          rec += " You shoul go have fun!";
         }
     }
 
@@ -153,7 +153,7 @@ export default function Journal() {
   useEffect(() => {
     getJournalEntry();
     setRecommendation(getRecommendation())
-  }, [user_id, sentimentScore]);
+  }, [user_id, sentimentScore, sleepScore, exerciseScore]);
 
   const renderJournalInput = () => (
     <View style={styles.container}>

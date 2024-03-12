@@ -10,6 +10,7 @@ export default function Home() {
   const [date, setDate] = useState(new Date());
   const { steps, sleep, workouts } = useHealthData(date);
   const [happinessScore, setHappinessScore] = useState(0);
+  const [dateString, setDateString] = useState(date.toDateString());
 
   const [user_id, setUser_id] = useState("PU3T"); // TODO: Get user id from auth hook
 
@@ -29,7 +30,12 @@ export default function Home() {
         if (response_data.success) {
           setExerciseGoal(response_data.data.exercise_info.exercise_goal);
           setSleepGoal(response_data.data.sleep_info.sleep_goal);
-          setSentimentScore((response_data.data.journal_info.happiness_score + 1) / 2);
+          if (response_data.data.journal_info.date === dateString) {
+            setSentimentScore((response_data.data.journal_info.happiness_score + 1) / 2);
+          } else{
+            setSentimentScore(0);
+          }
+          
         } else {
           setExerciseGoal(0);
           setSleepGoal(0);
@@ -39,6 +45,8 @@ export default function Home() {
     .catch((err) => console.log(err));
 
     if (workouts) {
+      console.log(workouts.data);
+
       const totalExerciseDuration = workouts.data.reduce(
         (total, workout) => total + ((workout.duration/60)/60), 0
       );
@@ -59,12 +67,16 @@ export default function Home() {
 
   useEffect(() => {
     getScores();
-  }, [user_id, sentimentScore]);
+  }, [user_id, sentimentScore, workouts, sleep, exerciseScore, sleepScore]);
+
+  const overallScore = () => {
+    return (sleepScore + exerciseScore + sentimentScore) / 3
+  }
 
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Your Overall Score is</Text>
-      <Text style={styles.titleCaption}>{happinessScore}</Text>
+      <Text style={styles.titleCaption}>{overallScore().toFixed(3)}</Text>
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
 
@@ -77,12 +89,12 @@ export default function Home() {
 
       <View>
         <Text style={styles.captionText}>Fitness</Text>
-        <Progress.Bar progress={sleepScore} width={400} height={30} color="rgb(193, 225, 193)" borderColor="black" />
+        <Progress.Bar progress={exerciseScore} width={400} height={30} color="rgb(193, 225, 193)" borderColor="black" />
       </View>
 
       <View>
         <Text style={styles.captionText}>Sleep</Text>
-        <Progress.Bar progress={exerciseScore} width={400} height={30} color="rgb(167, 199, 231)" borderColor="black" />
+        <Progress.Bar progress={sleepScore} width={400} height={30} color="rgb(167, 199, 231)" borderColor="black" />
       </View>
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />

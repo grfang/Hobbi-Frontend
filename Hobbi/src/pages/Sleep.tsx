@@ -28,6 +28,7 @@ export default function Sleep() {
   const [date, setDate] = useState(new Date());
   const { sleep } = useHealthData(date);
   const [sleepScore, setSleepScore] = useState(0);
+
   useEffect(() => {
     // Check if sleep.hours is a valid number before performing the division
     if (typeof sleep.hours === 'number' && !isNaN(sleep.hours) && sleepGoal !== 0) {

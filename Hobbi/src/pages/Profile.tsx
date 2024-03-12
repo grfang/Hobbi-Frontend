@@ -43,21 +43,13 @@ export default function Profile() {
   const [user_id, setUser_id] = useState("PU3T"); // TODO: Get user id from auth hook
   const backend_url = "http://127.0.0.1:5000/changeData?";
 
-  const [selectedSkill, setSelectedSkill] = useState<string[]>([]);
-  const [selectedEquipment, setSelectedEquipment] = useState<string[]>([]);
+  const {first, last, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime} = useAllData();
 
-  // const {first, last, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime} = useAllData();
-  const first = "Gia";
-  const last = "Fang";
-  const email = "giafang16@gmail.com";
-  const exerciseGoal = 2;
-  const skill = "Intermediate";
-  const equipment = ["Cable", "Barbell"];
-  const sleepGoal = 8;
-  const wakeupTime = 9;
+  const [selectedSkill, setSelectedSkill] = useState<string[]>([skill]);
+  const [selectedEquipment, setSelectedEquipment] = useState<string[]>(equipment);
 
   const [editing, setEditing] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AllData>({
     first: first,
     last: last,
     email: email,
@@ -67,6 +59,19 @@ export default function Profile() {
     sleepGoal: sleepGoal,
     wakeupTime: wakeupTime
   });
+
+  useEffect(() => {
+    setFormData({
+      first: first,
+      last: last,
+      email: email,
+      exerciseGoal: exerciseGoal,
+      skill: skill,
+      equipment: equipment,
+      sleepGoal: sleepGoal,
+      wakeupTime: wakeupTime
+    });
+  }, [first, last, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime]);
 
   const data = {user_id: user_id, first_name: formData.first, last_name: formData.last, email, exercise_goal: formData.exerciseGoal, skill: formData.skill, equipment: formData.equipment, sleep_goal: formData.sleepGoal, wakeup_time: formData.wakeupTime};
 
@@ -81,14 +86,14 @@ export default function Profile() {
       .then((res) => res.json())
       .then((response_data) => {
         setFormData({
-          first: response_data.first,
-          last: response_data.last,
-          email: response_data.email,
-          exerciseGoal: response_data.exerciseGoal,
-          skill: response_data.skill,
-          equipment: response_data.equipment,
-          sleepGoal: response_data.sleepGoal,
-          wakeupTime: response_data.wakeupTime
+          first: response_data.data.first,
+          last: response_data.data.last,
+          email: response_data.data.email,
+          exerciseGoal: response_data.data.exercise_info.exercise_goal,
+          skill: response_data.data.exercise_info.skill,
+          equipment: response_data.data.exercise_info.equipment,
+          sleepGoal: response_data.data.sleep_info.sleep_goal,
+          wakeupTime: response_data.data.sleep_info.wakeup_time
         });
       })
       .catch((err) => console.log(err));
