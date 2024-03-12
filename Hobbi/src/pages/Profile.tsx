@@ -102,6 +102,14 @@ export default function Profile() {
     setFormData({...formData, [field]: value});
   };
 
+  const handleNumberChange = (field: string, value: string) => {
+    if (value.trim() === ""){
+      setFormData({...formData, [field]: ""});
+    } else{
+      setFormData({...formData, [field]: parseInt(value)});
+    }
+  };
+
   const handleSkillChange = (selectedItem: string[]) => {
     setSelectedSkill(selectedItem);
     const updatedValue = {
@@ -172,7 +180,7 @@ export default function Profile() {
               placeholder="Enter new exercise goal"
               style={styles.textInput}
               value={formData.exerciseGoal.toString()}
-              onChangeText={(text) => handleTextChange('exerciseGoal', text)}
+              onChangeText={(text) => handleNumberChange('exerciseGoal', text)}
               autoCapitalize="none"
             />
             <View style={{'width': "80%"}}>
@@ -198,14 +206,14 @@ export default function Profile() {
             placeholder="Enter new sleep goal"
             style={styles.textInput}
             value={formData.sleepGoal.toString()}
-            onChangeText={(text) => handleTextChange('sleepGoal', text)}
+            onChangeText={(text) => handleNumberChange('sleepGoal', text)}
             autoCapitalize="none"
           />
           <TextInput
             placeholder="Enter new wake-up time"
             style={styles.textInput}
             value={formData.wakeupTime.toString()}
-            onChangeText={(text) => handleTextChange('wakeupTime', text)}
+            onChangeText={(text) => handleNumberChange('wakeupTime', text)}
             autoCapitalize="none"
           />
 
