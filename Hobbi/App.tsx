@@ -33,22 +33,23 @@ export type ScreenNames = [
 export type RootStackParamList = Record<ScreenNames[number], undefined>;
 export type StackNavigation = NavigationProp<RootStackParamList>;
 const Tab = createBottomTabNavigator<RootStackParamList>();
-
 const HappiTheme = {
   dark: false,
   colors: {
     primary: "rgb(76,164,87)",
-    background: "rgb(242, 242, 242)",
-    card: "rgb(255, 255, 255)",
-    text: "rgb(88, 120, 167)",
-    border: "rgb(76,164,87))",
+    background: "rgb(255, 255, 255)",
+    card: "rgb(88, 120, 167)",
+    text: "rgb(255, 255, 255)",
+    border: "rgb(76,164,87)",
     notification: "rgb(255, 69, 58)",
   },
 };
 
 function MainTabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{
+      tabBarStyle: { backgroundColor: 'rgb(255, 255, 255)' }
+    }}>
       <Tab.Screen
         name="Home"
         component={Home}
