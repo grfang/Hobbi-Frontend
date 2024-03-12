@@ -3,47 +3,28 @@ import { StyleSheet, Text, View } from "react-native";
 import useHealthData from "../hooks/useHealthData";
 import { useState, useEffect } from "react";
 import { formatDateTime } from "../utils/dateUtils";
+import useAllData from "../hooks/useAllData";
 // import { styles } from "../styles";
 import * as Progress from 'react-native-progress'; // make sure to install this by doing "npm install react-native-progress --save"
 
 export default function Home() {
   const [date, setDate] = useState(new Date());
-  const { steps, sleep, workouts } = useHealthData(date);
-  const [happinessScore, setHappinessScore] = useState(0);
   const [dateString, setDateString] = useState(date.toDateString());
 
   const [user_id, setUser_id] = useState("PU3T"); // TODO: Get user id from auth hook
 
-  const [exerciseGoal, setExerciseGoal] = useState(0);
+  const { sleep, workouts } = useHealthData(date);
+  const { sleepGoal, exerciseGoal, happinessScore, journalDate} = useAllData();
+
   const [exerciseScore, setExerciseScore] = useState(0);
-  const [sleepGoal, setSleepGoal] = useState(0);
   const [sleepScore, setSleepScore] = useState(0);
   const [sentimentScore, setSentimentScore] = useState(-2);
 
+  useEffect(() => {
+    getScores();
+  }, [user_id, sleepScore, exerciseScore, sentimentScore]);
+
   const getScores = () => {
-    const data_url = "http://127.0.0.1:5000/data?";
-    const data = {user_id: user_id};
-
-    fetch(data_url + new URLSearchParams(data))
-      .then((res) => res.json())
-      .then((response_data) => {
-        if (response_data.success) {
-          setExerciseGoal(response_data.data.exercise_info.exercise_goal);
-          setSleepGoal(response_data.data.sleep_info.sleep_goal);
-          if (response_data.data.journal_info.date === dateString) {
-            setSentimentScore((response_data.data.journal_info.happiness_score + 1) / 2);
-          } else{
-            setSentimentScore(0);
-          }
-          
-        } else {
-          setExerciseGoal(0);
-          setSleepGoal(0);
-          setSentimentScore(-2);
-        }
-      })
-    .catch((err) => console.log(err));
-
     if (workouts) {
       console.log(workouts.data);
 
@@ -63,11 +44,13 @@ export default function Home() {
     } else {
       setSleepScore(0);
     }
-  };
 
-  useEffect(() => {
-    getScores();
-  }, [user_id, sentimentScore, workouts, sleep, exerciseScore, sleepScore]);
+    if (journalDate === dateString) {
+      setSentimentScore((happinessScore+1) / 2)
+    } else{
+      setSentimentScore(0)
+    }
+  };
 
   const overallScore = () => {
     return (sleepScore + exerciseScore + sentimentScore) / 3

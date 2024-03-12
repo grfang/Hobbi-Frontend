@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -14,12 +15,23 @@ export const login = async (email: string, password: string) => {
       password
     );
     const user = userCredential.user;
+    await AsyncStorage.setItem('user_id', user.uid);
     return user;
   } catch (error) {
     console.log(error);
     throw error;
   }
 };
+
+export const logout = async () => {
+  try {
+    await auth.signOut();
+    await AsyncStorage.removeItem('user_id');
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
 export const signup = async (email: string, password: string) => {
   try {
@@ -29,7 +41,8 @@ export const signup = async (email: string, password: string) => {
       password
     );
     await emailVerification();
-    const user = userCredential.user;
+    const user = userCredential.user
+    await AsyncStorage.setItem('user_id', user.uid);
     return user;
   } catch (error) {
     console.log(error);
@@ -63,9 +76,6 @@ export const getPreferencesSet = async (id: string) => {
 
     if (jsonResponse.success) {
       return jsonResponse.data;
-    } else {
-      console.error("Failed to fetch if user has preferences:", jsonResponse);
-      return false;
     }
   } catch (error) {
     console.error("Error fetching if user has preferences:", error);

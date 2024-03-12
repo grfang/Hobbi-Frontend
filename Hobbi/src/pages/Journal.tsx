@@ -4,8 +4,7 @@ import { TextInput, Text, View, StyleSheet, Pressable, Modal } from "react-nativ
 // import { styles } from "../styles";
 import LoadingScreen from "../components/LoadingScreen";
 import useHealthData from "../hooks/useHealthData";
-import useSleepData from "../hooks/useSleepData";
-import useExerciseData from "../hooks/useExerciseData";
+import useAllData from "../hooks/useAllData";
 
 export default function Journal() {
   const backend_url = "http://127.0.0.1:5000/journal?";
@@ -25,31 +24,18 @@ export default function Journal() {
 
   const [recommendation, setRecommendation] = useState("")
 
-  const {workouts} = useHealthData(date);
-  const { sleep } = useHealthData(date);
+  const { sleep, workouts } = useHealthData(date);
+  const { sleepGoal, exerciseGoal} = useAllData();
 
-  const [exerciseGoal, setExerciseGoal] = useState(0);
   const [exerciseScore, setExerciseScore] = useState(0);
-  const [sleepGoal, setSleepGoal] = useState(0);
   const [sleepScore, setSleepScore] = useState(0);
 
-  const getRecommendation = () => {
-    const data_url = "http://127.0.0.1:5000/data?";
-    const data = {user_id: user_id};
+  useEffect(() => {
+    getJournalEntry();
+    getRecommendation();
+  }, [user_id, sleepScore, exerciseScore, sentimentScore]);
 
-    fetch(data_url + new URLSearchParams(data))
-      .then((res) => res.json())
-      .then((response_data) => {
-        if (response_data.success) {
-          setExerciseGoal(response_data.data.exercise_info.exercise_goal);
-          setSleepGoal(response_data.data.sleep_info.sleep_goal);
-        } else {
-          setExerciseGoal(0);
-          setSleepGoal(0);
-        }
-      })
-    .catch((err) => console.log(err));
-
+  const calculateScores = () => {
     if (workouts) {
       const totalExerciseDuration = workouts.data.reduce(
         (total, workout) => total + ((workout.duration/60)/60), 0
@@ -67,7 +53,11 @@ export default function Journal() {
     } else {
       setSleepScore(0);
     }
-    
+
+  }
+
+  const getRecommendation = () => {
+    calculateScores();
     //variables:
       // sleepScore: a score out of 100, if sleepScore >= 100, then their sleep goal has been met
       // exerciseScore: a score out of 100, if exerciseScore >= 100, then their exercise goal has been met
@@ -87,7 +77,7 @@ export default function Journal() {
     } else {
       rec = "You should try or learn something new today!";
     }
-
+    
     if (sentimentScore != -2)
     {
       if (sleepScore < 100)
@@ -100,11 +90,11 @@ export default function Journal() {
         }
       else
         {
-          rec += " You shoul go have fun!";
+          rec += " You should go have fun!";
         }
     }
-
-    return rec;
+    setRecommendation(rec);
+    setIsLoading(false);
   };
 
   const getJournalEntry = () => {
@@ -150,11 +140,6 @@ export default function Journal() {
         getJournalEntry();
       });
   };
-
-  useEffect(() => {
-    getJournalEntry();
-    setRecommendation(getRecommendation())
-  }, [user_id, sentimentScore, sleepScore, exerciseScore]);
 
   const renderJournalInput = () => (
     <View style={styles.container}>

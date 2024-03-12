@@ -4,6 +4,7 @@ import { Text, View, TextInput, Button, StyleSheet, Pressable } from "react-nati
 import { useState, useEffect } from "react";
 import MultiSelect from 'react-native-multiple-select';
 import useAllData from "../hooks/useAllData";
+import { logout } from "../services/auth";
 
 const skillOptions = [{
   id: '1',
@@ -143,7 +144,7 @@ export default function Profile() {
   };
 
   const handleLogout = () => {
-    // Log the user out
+    logout();
   };
 
   return (
