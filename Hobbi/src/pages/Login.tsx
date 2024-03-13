@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import { type StackNavigation } from "../../App";
 import { login } from "../services/auth";
 import { styles } from "../styles";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Login = () => {
   const { navigate } = useNavigation<StackNavigation>();
@@ -50,9 +51,8 @@ const Login = () => {
 
   return (
     <KeyboardAvoidingView style={styles.centeredContainer}>
-      <View style={styles.centeredContainer}>
         <Image source={happi_logo}></Image>
-        <Text>Login Page</Text>
+        <Text style={styles.loginTitle}>Happi</Text>
         <TextInput
           placeholder="Email"
           keyboardType="email-address"
@@ -71,7 +71,6 @@ const Login = () => {
         <TouchableOpacity onPress={handleSignup}>
           <Text>Don't have an account? Press here to register.</Text>
         </TouchableOpacity>
-      </View>
     </KeyboardAvoidingView>
   );
 };

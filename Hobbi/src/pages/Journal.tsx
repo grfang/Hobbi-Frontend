@@ -1,10 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
-import { TextInput, Text, View, StyleSheet, Pressable, Modal } from "react-native";
-// import { styles } from "../styles";
+import { TextInput, Text, View, Pressable, Modal } from "react-native";
+import { styles } from "../styles";
 import LoadingScreen from "../components/LoadingScreen";
-import useHealthData from "../hooks/useHealthData";
-import useAllData from "../hooks/useAllData";
 import { getAuth } from "firebase/auth";
 import getScores from "../hooks/calculateScores";
 
@@ -122,7 +120,7 @@ export default function Journal() {
   const renderJournalInput = () => (
     <View style={styles.container}>
       <Text style={styles.titleText}>Your Journal for today.</Text>
-      <Text style={styles.captionText}>
+      <Text style={styles.captionTextJournal}>
         Complete your daily entry below and receive a score determining your
         estimated happiness.
       </Text>
@@ -192,7 +190,7 @@ export default function Journal() {
   const renderSubmissionSuccess = () => (
     <View style={styles.centeredContainer}>
       <Text style={styles.titleText}>Journal Entry Submitted!</Text>
-      <Text style={styles.captionText}>
+      <Text style={styles.captionTextJournal}>
         Your journal entry has been submitted for scoring.
       </Text>
       <Pressable onPress={() => setShowSubmissionSuccess(false)} style={styles.button}>
@@ -212,85 +210,3 @@ export default function Journal() {
 
   return journal ? renderJournalDisplay() : renderJournalInput();
 }
-
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    paddingTop: 10,
-  },
-  centeredContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  titleText: {
-    fontSize: 40,
-    fontWeight: "bold",
-    marginBottom: 10,
-    marginTop: 10,
-    marginHorizontal: 10,
-    color: "#5878A7",
-    textAlign: "center",
-  },
-  titleCaption: {
-    fontSize: 40,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  heading2: {
-    fontSize: 30,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  textInput: {
-    height: 390,
-    borderColor: "gray",
-    borderWidth: 1,
-    width: "80%",
-    marginVertical: 20,
-    padding: 10,
-    backgroundColor: '#fcfcfc'
-  },
-  captionText: {
-    fontSize: 25,
-    color: "#333333",
-    marginBottom: 5,
-    textAlign: "center",
-    width: "90%",
-  },
-  regularText: {
-    fontSize: 17.5,
-    color: "#333333",
-    marginTop: 10,
-    textAlign: "center",
-    width: "80%",
-  },
-  button: {
-    backgroundColor: "#4CA457",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  buttonText: {
-    fontSize: 20,
-    color: "#FFFFFF",
-    textAlign: "center",
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-});

@@ -6,6 +6,7 @@ import { login } from "../services/auth";
 import { styles } from "../styles";
 import { getAuth } from "firebase/auth";
 import { savePreferenceData } from "../services/firebaseDatabase";
+import MultiSelect from 'react-native-multiple-select';
 
 const levels = [{
   id: '1',
@@ -20,19 +21,19 @@ const levels = [{
 
 const equipment = [{
   id: '1',
-  name: 'Any'
+  name: 'Body Only'
 }, {
   id: '2',
-  name: 'Barbell'
+  name: 'Dumbbell'
 }, {
   id: '3',
-  name: 'Body Only'
+  name: 'Barbell'
 }, {
   id: '4',
   name: 'Cable'
 }, {
   id: '5',
-  name: 'Dumbbell'
+  name: 'Other'
 }];
 
 interface MultiSelectProps {
@@ -49,10 +50,14 @@ const Preferences = () => {
 
   const [exerciseGoal, setExerciseGoal] = useState(0);
   const [skill, setSkill] = useState("Beginner");
-  const [equipment, setEquipment] = useState([]);
+  const [equipment, setEquipment] = useState<string[]>([]);
   const [sleep_goal, setSleepGoal] = useState(0);
   const [wakeup_time, setWakeupTime] = useState(0);
   const [showNextPage, setShowNextPage] = useState(false);
+
+  const handleSkillChange = (selectedItems: string[]) => {
+    setSkill(selectedItems[0]);
+  };
 
   const handleSetPreferences = async () => {
     try {
@@ -72,16 +77,16 @@ const Preferences = () => {
 
   const renderGymGoals = () => (
     <View style={styles.centeredContainer}>
-      <Text style={styles.titleText}>Gym Goals</Text>
+      <Text style={styles.titleText}>Exercise Preferences</Text>
       
-      <Text style={styles.captionText}>Skill Level</Text>
-      <View>
+      <Text style={styles.heading2}>Skill Level</Text>
+      <View style={{'width': "80%"}}>
         <MultiSelect
           items={levels}
-          selectedItem={[skill]}
-          onSelectedItemsChange={setSkill}
+          uniqueKey="name"
+          onSelectedItemsChange={handleSkillChange}
           single={true} // single select
-          selectText="Select Exercise Category"
+          selectText="Select Skill Level"
           searchInputPlaceholderText="Search Items..."
           onChangeInput={(text) => console.log(text)}
           tagRemoveIconColor="#CCC"
@@ -97,13 +102,12 @@ const Preferences = () => {
         />
       </View>
 
-      <Text style={styles.captionText}>Equipment</Text>
+      <Text style={styles.heading2}>Equipment</Text>
       <View>
         <MultiSelect
           items={equipment}
           uniqueKey="name"
           onSelectedItemsChange={setEquipment}
-          selectedItems={equipment}
           single={false} // multi select
           selectText="Select Equipment"
           searchInputPlaceholderText="Search Items..."

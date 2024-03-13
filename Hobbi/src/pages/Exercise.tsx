@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView} from 'react-native';
+import { View, Text, ScrollView} from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
 import { getAuth } from "firebase/auth";
-// import { styles } from "../styles"; // Import your styles
+import { styles } from "../styles"; // Import your styles
 
 const items = [{
   id: '1',
@@ -61,7 +61,7 @@ export default function Exercise() {
     <View style={styles.container}>
       <Text style={styles.titleText}>Discover Exercises</Text>
 
-      <Text style={styles.captionText}>
+      <Text style={styles.captionTextExercise}>
         Select an exercise category below to receive recommendations for exercises targeting that area of the body.
       </Text>
 
@@ -110,88 +110,3 @@ function SingleSelect({ items, selectedItem, onSelectedItemsChange }: SingleSele
     />
   );
 }
-
-export const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    paddingTop: 10,
-  },
-  centeredContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  titleText: {
-    fontSize: 40,
-    fontWeight: "bold",
-    marginBottom: 10,
-    marginTop: 10,
-    marginHorizontal: 10,
-    color: "#5878A7",
-    textAlign: "center",
-  },
-  titleCaption: {
-    fontSize: 40,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  heading2: {
-    fontSize: 30,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  textInput: {
-    height: 390,
-    borderColor: "gray",
-    borderWidth: 1,
-    width: "80%",
-    marginVertical: 20,
-    padding: 10,
-  },
-  captionText: {
-    fontSize: 20,
-    marginBottom: 20,
-    color: "#333333",
-    textAlign: "center",
-    width: "80%",
-  },
-  regularText: {
-    fontSize: 32,
-    color: "#333333",
-    marginBottom: 5,
-  },
-  button: {
-    backgroundColor: "#007BFF",
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-  },
-  buttonText: {
-    fontSize: 32,
-    color: "#FFFFFF",
-    textAlign: "center",
-  },
-  exerciseContainer: {
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    marginBottom: 10,
-    marginTop: 10,
-    width: '90%'
-  },
-  exerciseTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  exerciseDesc: {
-    fontSize: 14,
-    marginTop: 5,
-  },
-  exerciseDetails: {
-    fontSize: 12,
-    marginTop: 5,
-    color: '#666',
-  },
-});
