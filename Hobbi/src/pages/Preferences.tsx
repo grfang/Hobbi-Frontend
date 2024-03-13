@@ -7,6 +7,40 @@ import { styles } from "../styles";
 import { getAuth } from "firebase/auth";
 import { savePreferenceData } from "../services/firebaseDatabase";
 
+const levels = [{
+  id: '1',
+  name: 'Beginner'
+}, {
+  id: '2',
+  name: 'Intermediate'
+}, {
+  id: '3',
+  name: 'Expert'
+}];
+
+const equipment = [{
+  id: '1',
+  name: 'Any'
+}, {
+  id: '2',
+  name: 'Barbell'
+}, {
+  id: '3',
+  name: 'Body Only'
+}, {
+  id: '4',
+  name: 'Cable'
+}, {
+  id: '5',
+  name: 'Dumbbell'
+}];
+
+interface MultiSelectProps {
+  items: { id: string; name: string }[];
+  selectedItems: string[];
+  onSelectedItemsChange: (selectedItems: string[]) => void;
+}
+
 const Preferences = () => {
   const { navigate } = useNavigation<StackNavigation>();
 
@@ -39,10 +73,54 @@ const Preferences = () => {
   const renderGymGoals = () => (
     <View style={styles.centeredContainer}>
       <Text style={styles.titleText}>Gym Goals</Text>
-      <Text>
-        replace this text component with whatever components you need for
-        setting gym goals
-      </Text>
+      
+      <Text style={styles.captionText}>Skill Level</Text>
+      <View>
+        <MultiSelect
+          items={levels}
+          selectedItem={[skill]}
+          onSelectedItemsChange={setSkill}
+          single={true} // single select
+          selectText="Select Exercise Category"
+          searchInputPlaceholderText="Search Items..."
+          onChangeInput={(text) => console.log(text)}
+          tagRemoveIconColor="#CCC"
+          tagBorderColor="#CCC"
+          tagTextColor="#CCC"
+          selectedItemTextColor="#CCC"
+          selectedItemIconColor="#CCC"
+          itemTextColor="#000"
+          displayKey="name"
+          searchInputStyle={{ color: '#CCC' }}
+          submitButtonColor="#CCC"
+          submitButtonText="Submit"
+        />
+      </View>
+
+      <Text style={styles.captionText}>Equipment</Text>
+      <View>
+        <MultiSelect
+          items={equipment}
+          uniqueKey="name"
+          onSelectedItemsChange={setEquipment}
+          selectedItems={equipment}
+          single={false} // multi select
+          selectText="Select Equipment"
+          searchInputPlaceholderText="Search Items..."
+          onChangeInput={(text) => console.log(text)}
+          tagRemoveIconColor="#CCC"
+          tagBorderColor="#CCC"
+          tagTextColor="#CCC"
+          selectedItemTextColor="#CCC"
+          selectedItemIconColor="#CCC"
+          itemTextColor="#000"
+          displayKey="name"
+          searchInputStyle={{ color: '#CCC' }}
+          submitButtonColor="#CCC"
+          submitButtonText="Submit"
+        />
+      </View>
+      
       <Button onPress={() => setShowNextPage(true)} title="Next" />
     </View>
   );
