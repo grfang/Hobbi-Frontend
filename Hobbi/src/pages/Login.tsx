@@ -3,6 +3,7 @@ import {
   Text,
   View,
   Button,
+  Pressable,
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
@@ -12,7 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import { type StackNavigation } from "../../App";
 import { login } from "../services/auth";
 import { styles } from "../styles";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, FontAwesome6 } from "@expo/vector-icons";
 
 const Login = () => {
   const { navigate } = useNavigation<StackNavigation>();
@@ -53,23 +54,34 @@ const Login = () => {
     <KeyboardAvoidingView style={styles.centeredContainer}>
         <Image source={happi_logo}></Image>
         <Text style={styles.loginTitle}>Happi</Text>
-        <TextInput
-          placeholder="Email"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          value={email}
-          onChangeText={setEmail}
-        ></TextInput>
-        <TextInput
-          secureTextEntry={true}
-          placeholder="Password"
-          autoCapitalize="none"
-          value={password}
-          onChangeText={setPassword}
-        ></TextInput>
-        <Button onPress={() => handleLogin()} title="Login" />
+        <View style={styles.inputContainer}>
+          <MaterialCommunityIcons name="email-outline" size={24} color="#ccc" style={styles.icon} />
+          <TextInput
+            placeholder="Email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={setEmail}
+            style={styles.loginTextInput}
+          ></TextInput>
+        </View>
+        <View style={styles.inputContainer}>
+          <FontAwesome6 name="lock" size={24} color="#ccc" style={styles.icon} />
+          <TextInput
+            secureTextEntry={true}
+            placeholder="Password"
+            autoCapitalize="none"
+            value={password}
+            onChangeText={setPassword}
+            style={styles.loginTextInput}
+          ></TextInput>
+        </View>
+
+        <Pressable onPress={() => handleLogin()} style={styles.loginButton}>
+          <Text style={styles.buttonText}>Login</Text>
+        </Pressable>
         <TouchableOpacity onPress={handleSignup}>
-          <Text>Don't have an account? Press here to register.</Text>
+          <Text style={styles.signUpSmallText}>Don't have an account? <Text style={{textDecorationLine: 'underline'}}>Sign Up</Text></Text>
         </TouchableOpacity>
     </KeyboardAvoidingView>
   );

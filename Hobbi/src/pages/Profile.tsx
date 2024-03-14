@@ -6,6 +6,7 @@ import MultiSelect from 'react-native-multiple-select';
 import useAllData from "../hooks/useAllData";
 import { logout } from "../services/auth";
 import { getAuth } from "firebase/auth";
+import { useAppContext } from "../contexts/AppContext";
 
 const skillOptions = [{
   id: '1',
@@ -51,6 +52,8 @@ export default function Profile() {
   const [selectedSkill, setSelectedSkill] = useState<string[]>([skill]);
   const [selectedEquipment, setSelectedEquipment] = useState<string[]>(equipment);
 
+  const { setTriggerRefresh } = useAppContext();
+
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState<AllData>({
     first: first,
@@ -78,7 +81,7 @@ export default function Profile() {
 
   const data = {user_id: user_id, first_name: formData.first, last_name: formData.last, email, exercise_goal: formData.exerciseGoal, skill: formData.skill, equipment: formData.equipment, sleep_goal: formData.sleepGoal, wakeup_time: formData.wakeupTime};
 
-  const fetchData = () => {
+  const updateData = () => {
     fetch(backend_url, {
       method: "POST",
       headers: {
@@ -142,7 +145,8 @@ export default function Profile() {
 
   const handleSave = () => {
     setEditing(false);
-    fetchData();
+    updateData();
+    setTriggerRefresh(refresh => !refresh);
   };
 
   const handleLogout = () => {

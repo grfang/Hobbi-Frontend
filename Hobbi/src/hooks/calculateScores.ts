@@ -13,10 +13,12 @@ const getScores = () => {
   const [sentimentScore, setSentimentScore] = useState(0);
   const [overallScore, setOverallScore] = useState(0);
 
+
   useEffect(() => {
     let newExerciseScore = 0;
     let newSleepScore = 0;
     let newSentimentScore = sentimentScore;
+    let newOverallScore = 0;
 
     if (workouts) {
       const totalExerciseDuration = workouts.data.reduce(
@@ -34,9 +36,10 @@ const getScores = () => {
 
     if (journalDate === dateString) {
       newSentimentScore = (happinessScore + 1) / 2;
+      newOverallScore = (newExerciseScore + newSleepScore + newSentimentScore) / 3;
+    } else {
+      newOverallScore = (newExerciseScore + newSleepScore) / 2;
     }
-
-    const newOverallScore = (newExerciseScore + newSleepScore + newSentimentScore) / 3;
 
     setExerciseScore(newExerciseScore);
     setSleepScore(newSleepScore);

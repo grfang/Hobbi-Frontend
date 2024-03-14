@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import getScores from "../hooks/calculateScores";
 import { styles } from "../styles";
 import * as Progress from 'react-native-progress'; // make sure to install this by doing "npm install react-native-progress --save"
+import { getOverallGrade } from "../utils/scoreUtils";
 
 export default function Home() {
   const {sleepScore, exerciseScore, sentimentScore, overallScore} = getScores();
@@ -10,7 +11,7 @@ export default function Home() {
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Your Overall Score is</Text>
-      <Text style={styles.titleCaption}>{overallScore.toFixed(3)}</Text>
+      <Text style={styles.titleCaption}>{getOverallGrade(overallScore)}</Text>
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
 
