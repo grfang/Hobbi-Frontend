@@ -6,6 +6,7 @@ import CircularProgress from "react-native-circular-progress-indicator";
 import useHealthData from "../hooks/useHealthData";
 import useSleepData from "../hooks/useSleepData";
 import { styles } from "../styles";
+import { getSleepGrade } from "../utils/scoreUtils";
 
 const convertTimeToString = (time: number) => {
   const hours = Math.floor(time);
@@ -42,7 +43,7 @@ export default function Sleep() {
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Your Sleep Score is</Text>
-      <Text style={styles.titleCaption}>{sleepScore}</Text>
+      <Text style={styles.titleCaption}>{getSleepGrade(sleepScore)}</Text>
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
 

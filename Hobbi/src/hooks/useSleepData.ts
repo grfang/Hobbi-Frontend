@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
+import { useAppContext } from "../contexts/AppContext";
 
 const useSleepData = () => {
   const [sleepGoal, setSleepGoal] = useState(0);
@@ -7,6 +8,9 @@ const useSleepData = () => {
   const [recTimes, setRecTimes] = useState([]);
   const user = getAuth().currentUser;
   const user_id = user ? user.uid : "";
+
+  const { triggerRefresh } = useAppContext();
+
 
   useEffect(() => {
     const data_url = "http://127.0.0.1:5000/data?";
@@ -45,7 +49,7 @@ const useSleepData = () => {
       };
   
       fetchWakeupData();
-  }, [user_id, sleepGoal, wakeupTime]); // rerun if user_id changes
+  }, [user_id, sleepGoal, wakeupTime, triggerRefresh]); // rerun if user_id changes
 
   return {sleepGoal, wakeupTime, recTimes};
 };

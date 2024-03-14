@@ -4,7 +4,10 @@ import { TextInput, Text, View, Pressable, Modal } from "react-native";
 import { styles } from "../styles";
 import LoadingScreen from "../components/LoadingScreen";
 import { getAuth } from "firebase/auth";
+import { useAppContext } from "../contexts/AppContext";
 import getScores from "../hooks/calculateScores";
+import { getJournalGrade } from "../utils/scoreUtils";
+
 
 export default function Journal() {
   const backend_url = "http://127.0.0.1:5000/journal?";
@@ -20,21 +23,18 @@ export default function Journal() {
   const [showJournalModal, setShowJournalModal] = useState(false);
 
   const [journal, setJournal] = useState<JournalEntry | null>(null);
-  const [sentimentScore, setSentimentScore] = useState(0);
   const [value, onChangeText] = useState("");
-
-  const [recommendation, setRecommendation] = useState("")
-
+  const [recommendation, setRecommendation] = useState("No score to base recommendation off of.")
+  
   const {exerciseScore, sleepScore} = getScores();
 
-  useEffect(() => {
-    setIsLoading(true);
-    getJournalEntry();
-    setRecommendation(getRecommendation());
-    setIsLoading(false);
-  }, [user_id, sleepScore, exerciseScore, sentimentScore]);
+  const { setTriggerRefresh } = useAppContext();
 
-  const getRecommendation = () => {
+  useEffect(() => {
+    getJournalEntry();
+  }, [user_id, sleepScore, exerciseScore]);
+
+  const getRecommendation = (sentimentScore: number) => {
     //variables:
       // sleepScore: a score out of 100, if sleepScore >= 100, then their sleep goal has been met
       // exerciseScore: a score out of 100, if exerciseScore >= 100, then their exercise goal has been met
@@ -42,9 +42,7 @@ export default function Journal() {
     //rec is the final string that is returned and displayed
     let rec = ""
     let depressed = 0
-    if (!journal){
-      rec = "No score to base recommendation off of.";
-    } else if (sentimentScore < -0.5) {
+    if (sentimentScore < -0.5) {
       rec = "You should take some time to talk with a friend or meditate.";
       depressed = 1;
     } else if (sentimentScore >= 0.5 && sentimentScore < 0) {
@@ -55,26 +53,22 @@ export default function Journal() {
       rec = "You should try or learn something new today!";
     }
     
-    if (journal)
+    if (sleepScore < 1)
     {
-      if (sleepScore < 1)
-        {
-          rec += " Then go take a nap because you have not slept as much as you'd like!";
-        }
-      else if (exerciseScore < 1 && depressed != 1)
-        {
-          rec += " Then go do some exercise because you haven't met your daily exercise goal!";
-        }
-      else
-        {
-          rec += " You should go have fun!";
-        }
+      rec += " Then go take a nap because you have not slept as much as you'd like!";
+    } else if (exerciseScore < 1 && depressed != 1)
+    {
+      rec += " Then go do some exercise because you haven't met your daily exercise goal!";
+    } else
+    {
+      rec += " You should go have fun!";
     }
     return rec;
 
   };
 
   const getJournalEntry = () => {
+    setIsLoading(true);
     const data = { user_id: user_id, date: date.toDateString() };
 
     fetch(get_url + new URLSearchParams(data))
@@ -83,12 +77,11 @@ export default function Journal() {
         console.log(response_data);
         if (response_data.success) {
           setJournal(response_data.data);
-          setSentimentScore(response_data.data.score);
+          setRecommendation(getRecommendation(response_data.data.score));
         }
       })
       .catch((err) => console.log(err))
-      .finally(() => {
-      });
+      .finally(() => setIsLoading(false));
   };
 
   const submitJournalEntry = () => {
@@ -106,14 +99,11 @@ export default function Journal() {
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
-      .then((response_data) => {
-        console.log(response_data);
-        setSentimentScore(response_data.data.score);
-      })
       .catch((err) => console.log(err))
       .finally(() => {
-        setShowSubmissionSuccess(true);
         getJournalEntry();
+        setShowSubmissionSuccess(true);
+        setTriggerRefresh(refresh => !refresh)
       });
   };
 
@@ -144,7 +134,7 @@ export default function Journal() {
   const renderJournalDisplay = () => (
     <View style={styles.container}>
       <Text style={styles.titleText}>Your Journal score is:</Text>
-      <Text style={styles.titleCaption}>{journal!.score.toFixed(3)}</Text>
+      <Text style={styles.titleCaption}>{getJournalGrade(journal!.score)}</Text>
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
 
@@ -203,8 +193,7 @@ export default function Journal() {
   if (isLoading) {
     return <LoadingScreen />;
   }
-
-  if (showSubmissionSuccess) {
+  else if (showSubmissionSuccess) {
     return renderSubmissionSuccess();
   }
 

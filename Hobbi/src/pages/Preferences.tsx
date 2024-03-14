@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Text, View, Button } from "react-native";
+import { Text, View, Button, TextInput, Pressable, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigation } from "../../App";
-import { login } from "../services/auth";
 import { styles } from "../styles";
 import { getAuth } from "firebase/auth";
 import { savePreferenceData } from "../services/firebaseDatabase";
 import MultiSelect from 'react-native-multiple-select';
+import DateTimePicker, {type DateTimePickerEvent} from '@react-native-community/datetimepicker';
 
 const levels = [{
   id: '1',
@@ -19,7 +19,7 @@ const levels = [{
   name: 'Expert'
 }];
 
-const equipment = [{
+const equipments = [{
   id: '1',
   name: 'Body Only'
 }, {
@@ -36,12 +36,6 @@ const equipment = [{
   name: 'Other'
 }];
 
-interface MultiSelectProps {
-  items: { id: string; name: string }[];
-  selectedItems: string[];
-  onSelectedItemsChange: (selectedItems: string[]) => void;
-}
-
 const Preferences = () => {
   const { navigate } = useNavigation<StackNavigation>();
 
@@ -49,14 +43,39 @@ const Preferences = () => {
   const id = user ? user.uid : "";
 
   const [exerciseGoal, setExerciseGoal] = useState(0);
-  const [skill, setSkill] = useState("Beginner");
+  const [skill, setSkill] = useState("");
   const [equipment, setEquipment] = useState<string[]>([]);
   const [sleep_goal, setSleepGoal] = useState(0);
   const [wakeup_time, setWakeupTime] = useState(0);
   const [showNextPage, setShowNextPage] = useState(false);
+  const [ date, setDate ] = useState(new Date());
 
   const handleSkillChange = (selectedItems: string[]) => {
     setSkill(selectedItems[0]);
+  };
+
+  const handleExerciseGoal = (text: string) => {
+    setExerciseGoal(parseInt(text));
+  }
+
+  const handleSleepGoal = (text: string) => {
+    setSleepGoal(parseInt(text))
+  }
+
+  const handleWakeUpTime = (event: DateTimePickerEvent, selectedDate?: Date | undefined) => {
+    const currentDate = selectedDate
+    if (currentDate) {
+      setDate(currentDate)
+      const hours = currentDate.getHours();
+      const minutes = currentDate.getMinutes();
+      const militaryTime = hours + (minutes / 60);
+      setWakeupTime(militaryTime);
+      console.log(militaryTime)
+    }
+  }
+
+  const handleGoBack = () => {
+    setShowNextPage(false);
   };
 
   const handleSetPreferences = async () => {
@@ -77,66 +96,99 @@ const Preferences = () => {
 
   const renderGymGoals = () => (
     <View style={styles.centeredContainer}>
-      <Text style={styles.titleText}>Exercise Preferences</Text>
+      <Text style={styles.loginTitle}>Exercise Preferences</Text>
+
+      <Text style={styles.preferencesText}>Daily Exercise Goal (hours)</Text>
+      <TextInput
+        key={"exercise"}
+        placeholder=""
+        style={styles.signUpTextInput}
+        onChangeText={(text) => handleExerciseGoal(text)}
+        keyboardType="decimal-pad"
+      />
       
-      <Text style={styles.heading2}>Skill Level</Text>
+      <Text style={[styles.preferencesText]}>Skill Level</Text>
       <View style={{'width': "80%"}}>
         <MultiSelect
           items={levels}
           uniqueKey="name"
+          selectedItems={[skill]}
           onSelectedItemsChange={handleSkillChange}
           single={true} // single select
           selectText="Select Skill Level"
-          searchInputPlaceholderText="Search Items..."
-          onChangeInput={(text) => console.log(text)}
+          textInputProps={{ editable: false, autoFocus: false }}
+          searchInputPlaceholderText=""
+          searchIcon={false}
           tagRemoveIconColor="#CCC"
-          tagBorderColor="#CCC"
-          tagTextColor="#CCC"
-          selectedItemTextColor="#CCC"
-          selectedItemIconColor="#CCC"
+          tagBorderColor="rgb(99,162,95)"
+          tagTextColor="rgb(99,162,95)"
+          selectedItemTextColor="rgb(99,162,95)"
+          selectedItemIconColor="rgb(99,162,95)"
           itemTextColor="#000"
           displayKey="name"
-          searchInputStyle={{ color: '#CCC' }}
-          submitButtonColor="#CCC"
+          submitButtonColor="rgb(99,162,95)"
           submitButtonText="Submit"
         />
       </View>
 
-      <Text style={styles.heading2}>Equipment</Text>
-      <View>
+      <Text style={styles.preferencesText}>Equipment</Text>
+      <View  style={{'width': "80%"}}>
         <MultiSelect
-          items={equipment}
+          items={equipments}
           uniqueKey="name"
+          selectedItems={equipment}
           onSelectedItemsChange={setEquipment}
           single={false} // multi select
           selectText="Select Equipment"
-          searchInputPlaceholderText="Search Items..."
-          onChangeInput={(text) => console.log(text)}
+          textInputProps={{ editable: false, autoFocus: false }}
+          searchInputPlaceholderText=""
+          searchIcon={false}
           tagRemoveIconColor="#CCC"
-          tagBorderColor="#CCC"
-          tagTextColor="#CCC"
-          selectedItemTextColor="#CCC"
-          selectedItemIconColor="#CCC"
+          tagBorderColor="rgb(99,162,95)"
+          tagTextColor="rgb(99,162,95)"
+          selectedItemTextColor="rgb(99,162,95)"
+          selectedItemIconColor="rgb(99,162,95)"
           itemTextColor="#000"
           displayKey="name"
           searchInputStyle={{ color: '#CCC' }}
-          submitButtonColor="#CCC"
+          submitButtonColor="rgb(99,162,95)"
           submitButtonText="Submit"
         />
       </View>
       
-      <Button onPress={() => setShowNextPage(true)} title="Next" />
+      <Pressable onPress={() => setShowNextPage(true)} style={styles.preferencesButton}>
+          <Text style={styles.buttonText}>Next</Text>
+      </Pressable>
     </View>
   );
 
   const renderSleepGoals = () => (
     <View style={styles.centeredContainer}>
-      <Text style={styles.titleText}>Sleep Goals</Text>
-      <Text>
-        replace this text component with whatever components you need for
-        setting sleep goals
-      </Text>
-      <Button onPress={() => handleSetPreferences()} title="Finish" />
+      <Text style={styles.loginTitle}>Sleep Preferences</Text>
+      <Text style={styles.preferencesText}>Daily Sleep Goal (hours)</Text>
+      <TextInput
+        key={"sleep"}
+        placeholder=""
+        style={styles.signUpTextInput}
+        onChangeText={(text) => handleSleepGoal(text)}
+        keyboardType="decimal-pad"
+      />
+      <Text style={styles.preferencesText}>Daily Wake-Up Time</Text>
+        <DateTimePicker
+          style={{alignSelf: 'flex-start', marginLeft: 33, marginBottom: 20}}
+          testID="dateTimePicker"
+          value={date}
+          mode={"time"}
+          is24Hour={true}
+          onChange={handleWakeUpTime}
+        />
+      
+      <Pressable onPress={() => handleSetPreferences()} style={styles.preferencesButton}>
+          <Text style={styles.buttonText}>Finish</Text>
+      </Pressable>
+      <TouchableOpacity onPress={() => handleGoBack()}>
+          <Text style={styles.signUpSmallText}><Text style={{textDecorationLine: 'underline'}}>Back</Text></Text>
+      </TouchableOpacity>
     </View>
   );
 

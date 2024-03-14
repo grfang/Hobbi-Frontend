@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
+import { useAppContext } from "../contexts/AppContext";
 
 const useAllData = () => {
   const [first, setFirst] = useState('');
@@ -15,6 +16,8 @@ const useAllData = () => {
   const [journalDate, setJournalDate] = useState('');
   const user = getAuth().currentUser;
   const user_id = user ? user.uid : "";
+
+  const { triggerRefresh } = useAppContext();
 
   useEffect(() => {
     const data_url = "http://127.0.0.1:5000/data?";
@@ -43,7 +46,7 @@ const useAllData = () => {
     };
   
       fetchData();
-  }, [user_id]); // rerun if user_id changes
+  }, [user_id, triggerRefresh]); // rerun if user_id changes
 
   return {first, last, email, exerciseGoal, skill, equipment, sleepGoal, wakeupTime, happinessScore, journalEntry, journalDate};
 };

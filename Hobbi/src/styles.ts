@@ -139,16 +139,60 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: 'Noteworthy',
   },
-  loginTextInput: {
-    borderColor: "transparent",
+  loginButton: {
+    backgroundColor: "rgb(99,162,95)",
+    padding: 10,
+    borderRadius: 20,
+    marginTop: 50,
+    marginBottom: 50,
+    paddingVertical: 10, // Adjust the padding to extend the pressable area vertically
+    paddingHorizontal: 70,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgb(227,241,224)',
+    borderRadius: 10,
+    padding: 10,
     borderWidth: 1,
-    textAlign: 'left',
-    height: 35,
-    width: '80%',
-    alignSelf: 'center',
-    fontSize: 20,
-    marginTop: 5,
-    marginBottom: 10,
+    borderColor: '#ccc',
+    width: "80%",
+    marginTop: 30,
+  },
+  icon: {
+    marginRight: 10, // Spacing between icon and TextInput
+  },
+  loginTextInput: {
+    flex: 1, // Take remaining space
+  },
+  signUpSmallText: {
+    marginBottom: 35,
+  },
+  signUpTextInput: {
+    height: 40,
+    borderColor: "#ccc",
+    borderWidth: 1,
+    width: "80%",
+    padding: 10,
     backgroundColor: 'rgb(227,241,224)'
+  },
+  preferencesText: {
+    alignSelf: "flex-start",
+    fontSize: 17.5,
+    color: "#333333",
+    width: "80%",
+    paddingLeft: 43,
+    fontWeight: 'bold',
+    marginTop: 40,
+    marginBottom: 5
+  },
+  preferencesButton: {
+    backgroundColor: "rgb(99,162,95)",
+    padding: 10,
+    borderRadius: 20,
+    marginTop: 50,
+    marginBottom: 20,
+    paddingVertical: 10, // Adjust the padding to extend the pressable area vertically
+    paddingHorizontal: 70,
   },
 });

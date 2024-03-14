@@ -13,6 +13,7 @@ const getScores = () => {
   const [sentimentScore, setSentimentScore] = useState(0);
   const [overallScore, setOverallScore] = useState(0);
 
+
   useEffect(() => {
     let newExerciseScore = 0;
     let newSleepScore = 0;

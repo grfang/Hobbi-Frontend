@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer, NavigationProp } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -6,6 +6,7 @@ import { FontAwesome, Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { getAuth, onAuthStateChanged, type User } from "firebase/auth";
 import { getPreferencesSet } from "./src/services/auth";
+import { AppProvider } from "./src/contexts/AppContext";
 import { app } from "./src/services/config";
 import { styles } from "./src/styles";
 
@@ -17,7 +18,7 @@ import Sleep from "./src/pages/Sleep";
 import Exercise from "./src/pages/Exercise";
 import Journal from "./src/pages/Journal";
 import Profile from "./src/pages/Profile";
-import React, { useEffect } from "react";
+import LoadingScreen from "./src/components/LoadingScreen";
 
 export type ScreenNames = [
   "Main",
@@ -107,7 +108,7 @@ function MainTabs() {
 export default function App() {
   const Stack = createNativeStackNavigator();
   const auth = getAuth(app);
-  const [initializing, setInitializing] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [hasPreferences, setHasPreferences] = useState(false);
 
@@ -115,10 +116,11 @@ export default function App() {
   const onAuthStateChangedHandler = async (user: User | null) => {
     setUser(user);
     if (user) {
-      setHasPreferences(await getPreferencesSet(user.uid));
-    }
-    if (initializing) {
-      setInitializing(false);
+      const preferencesSet = await getPreferencesSet(user.uid);
+      setHasPreferences(preferencesSet);
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
     }
   };
 
@@ -128,73 +130,56 @@ export default function App() {
     return unsubscribe;
   }, []);
 
-  if (initializing) {
+  if (isLoading) {
     return (
-      <View style={styles.centeredContainer}>
-        <Text>Loading...</Text>
-      </View>
+      <LoadingScreen />
     );
   }
 
   return (
-    <NavigationContainer theme={HappiTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {user ? (
-          !hasPreferences ? (
-            // If preferences are not set, navigate to Preferences
-            <>
-              <Stack.Screen
-                name="Preferences"
-                component={Preferences}
-                options={{ headerShown: false }}
-              />
+    <AppProvider>
+      <NavigationContainer theme={HappiTheme}>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {user ? (
+            !hasPreferences ? (
+              // If preferences are not set, navigate to Preferences
+              <>
+                <Stack.Screen
+                  name="Preferences"
+                  component={Preferences}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="Main"
+                  component={MainTabs}
+                  options={{ headerShown: false }}
+                />
+              </>
+            ) : (
+              // If preferences are already set, navigate to Main
               <Stack.Screen
                 name="Main"
                 component={MainTabs}
                 options={{ headerShown: false }}
               />
-            </>
+            )
           ) : (
-            // If preferences are already set, navigate to Main
-            <Stack.Screen
-              name="Main"
-              component={MainTabs}
-              options={{ headerShown: false }}
-            />
-          )
-        ) : (
-          // User not logged in, show Login and Register
-          <>
-            <Stack.Screen
-              name="Login"
-              component={Login}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="Register"
-              component={Register}
-              options={{ headerShown: false }}
-            />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+            // User not logged in, show Login and Register
+            <>
+              <Stack.Screen
+                name="Login"
+                component={Login}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Register"
+                component={Register}
+                options={{ headerShown: false }}
+              />
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AppProvider>
   );
-
-  // return (
-  //   <NavigationContainer theme={HappiTheme}>
-  //     <Stack.Navigator initialRouteName="Login">
-  //       <Stack.Screen
-  //         name="Login"
-  //         component={Login}
-  //         options={{ headerShown: false }}
-  //       />
-  //       <Stack.Screen
-  //         name="Main"
-  //         component={MainTabs}
-  //         options={{ headerShown: false }}
-  //       />
-  //     </Stack.Navigator>
-  //   </NavigationContainer>
-  // );
 }
