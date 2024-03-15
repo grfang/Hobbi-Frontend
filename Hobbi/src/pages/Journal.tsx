@@ -35,36 +35,25 @@ export default function Journal() {
   }, [user_id, sleepScore, exerciseScore]);
 
   const getRecommendation = (sentimentScore: number) => {
-    //variables:
-      // sleepScore: a score out of 100, if sleepScore >= 100, then their sleep goal has been met
-      // exerciseScore: a score out of 100, if exerciseScore >= 100, then their exercise goal has been met
-      // sentimentScore: their happiness score from -1 to 1
-    //rec is the final string that is returned and displayed
     let rec = ""
-    let depressed = 0
-    if (sentimentScore < -0.5) {
-      rec = "You should take some time to talk with a friend or meditate.";
-      depressed = 1;
-    } else if (sentimentScore >= 0.5 && sentimentScore < 0) {
-      rec = "You should go out for a bit or work on a hobby.";
-    } else if (sentimentScore >= 0 && sentimentScore < 0.5) {
-      rec = "You should complete any chores or work not done for now.";
+    if (sentimentScore <= -0.75) {
+      rec = "You're experiencing a profound sense of distress. It's important to acknowledge your emotions and reach out for support. Take some time for self-care and consider speaking to a trusted friend or professional.";
+    } else if (sentimentScore <= -0.5) {
+      rec = "You're feeling quite down today, but remember, tough times don't last forever. Engage in activities that bring you joy or relaxation. A walk in nature or indulging in your favorite hobby might help lift your spirits.";
+    } else if (sentimentScore <= -0.25) {
+      rec = "You're having a rough day, but there's light ahead. Try to focus on the positives, even if they seem small. Practicing gratitude can shift your perspective and bring about a sense of hope.";
+    } else if (sentimentScore <= 0) {
+      rec = "You're feeling a bit low, but remember, it's okay not to be okay all the time. Take a moment to reflect on what's bothering you and consider what steps you can take to improve your mood. Small acts of self-care can make a big difference.";
+    } else if (sentimentScore <= 0.25) {
+      rec = "You're feeling neutral today, which is perfectly fine. Use this time to check in with yourself and your needs. Consider setting small goals or tasks to boost your motivation and sense of accomplishment.";
+    } else if (sentimentScore <= 0.5) {
+      rec = "You're feeling relatively positive today, keep up the good work! Take this momentum and channel it into something productive or fulfilling. Celebrate your achievements, no matter how small.";
+    } else if (sentimentScore <= 0.75) {
+      rec = "You're having a good day! Embrace this positivity and spread it to others. Engage in activities that bring you joy and fulfillment. Remember to express gratitude for the blessings in your life.";
     } else {
-      rec = "You should try or learn something new today!";
-    }
-    
-    if (sleepScore < 1)
-    {
-      rec += " Then go take a nap because you have not slept as much as you'd like!";
-    } else if (exerciseScore < 1 && depressed != 1)
-    {
-      rec += " Then go do some exercise because you haven't met your daily exercise goal!";
-    } else
-    {
-      rec += " You should go have fun!";
+      rec = "You're radiating happiness today! Keep shining bright and share your positivity with the world. Make the most of this wonderful day and cherish every moment. Remember to pay it forward and spread kindness wherever you go.";
     }
     return rec;
-
   };
 
   const getJournalEntry = () => {
@@ -138,7 +127,7 @@ export default function Journal() {
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
 
-      <Text style={styles.heading2}>Recommendation:</Text>
+      <Text style={styles.heading2}>Summary:</Text>
       <Text style={styles.regularText}>{recommendation}</Text>
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
