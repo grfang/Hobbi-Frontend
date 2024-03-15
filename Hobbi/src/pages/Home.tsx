@@ -6,7 +6,7 @@ import * as Progress from 'react-native-progress'; // make sure to install this 
 import { getOverallGrade } from "../utils/scoreUtils";
 
 export default function Home() {
-  const {sleepScore, exerciseScore, sentimentScore, overallScore} = getScores();
+  const {sleepScore, exerciseScore, sentimentScore, overallScore, recommendation} = getScores();
 
   return (
     <View style={styles.container}>
@@ -33,6 +33,9 @@ export default function Home() {
       </View>
 
       <View style={{borderBottomWidth: 25, borderBottomColor: '#f2f2f2', width: '100%', marginBottom: 20, marginTop: 20}} />
+
+      <Text style={styles.heading2}>Overall Recommendation:</Text>
+      <Text style={styles.regularText}>{recommendation}</Text>
     
       <StatusBar style="auto" />
     </View>
