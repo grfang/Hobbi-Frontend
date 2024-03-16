@@ -7,6 +7,7 @@ import { getAuth } from "firebase/auth";
 import { savePreferenceData } from "../services/firebaseDatabase";
 import MultiSelect from 'react-native-multiple-select';
 import DateTimePicker, {type DateTimePickerEvent} from '@react-native-community/datetimepicker';
+import { useAppContext } from "../contexts/AppContext";
 
 const levels = [{
   id: '1',
@@ -50,6 +51,8 @@ const Preferences = () => {
   const [showNextPage, setShowNextPage] = useState(false);
   const [ date, setDate ] = useState(new Date());
 
+  const { setTriggerRefresh } = useAppContext();
+
   const handleSkillChange = (selectedItems: string[]) => {
     setSkill(selectedItems[0]);
   };
@@ -88,6 +91,7 @@ const Preferences = () => {
         sleep_goal,
         wakeup_time
       );
+      setTriggerRefresh(refresh => !refresh);
       navigate("Main");
     } catch (error) {
       console.log(error);
